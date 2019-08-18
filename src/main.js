@@ -5,6 +5,7 @@ import {createSortingTemplate} from "./components/sorting";
 import {createListEventsTemplate} from "./components/list-events";
 import {createEventEditTemplate} from "./components/event-edit";
 import {createCardTemplate} from "./components/card";
+// import {waypoint} from "./site-data";
 
 const render = (container, place, template) => {
   container.insertAdjacentHTML(place, template);
