@@ -5,8 +5,10 @@ import {createSortingTemplate} from "./components/sorting";
 import {createListEventsTemplate} from "./components/list-events";
 import {createEventEditTemplate} from "./components/event-edit";
 import {createCardTemplate} from "./components/card";
-// import {waypoint} from "./site-data";
+import {getWaypoint} from "./site-data";
 
+const COUNT_WAYPOINTS = 4;
+const waypoints = new Array(COUNT_WAYPOINTS).fill(``).map(() => getWaypoint());
 const render = (container, place, template) => {
   container.insertAdjacentHTML(place, template);
 };
@@ -23,5 +25,6 @@ render(siteTripEventsElement, `beforeend`, createSortingTemplate());
 render(siteTripEventsElement, `beforeend`, createListEventsTemplate());
 
 const siteTripEventsListElement = document.querySelector(`.trip-events__list`);
-render(siteTripEventsListElement, `beforeend`, createEventEditTemplate());
-new Array(3).fill(``).forEach(() => render(siteTripEventsListElement, `beforeend`, createCardTemplate()));
+render(siteTripEventsListElement, `beforeend`, createEventEditTemplate(waypoints[0]));
+
+render(siteTripEventsListElement, `beforeend`, waypoints.slice(1).map(createCardTemplate).join(``));

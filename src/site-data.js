@@ -20,32 +20,42 @@ const getRandomArray = (arr, max, min) => {
   return Array.from(mySet);
 };
 
-export const waypoint = {
+export const cities = [
+  `Saint Petersburg`,
+  `Geneva`,
+  `Amsterdam`,
+  `Chamonix`,
+  `Moscow`,
+  `Samara`,
+  `Yekaterinburg`,
+  `Berlin`,
+  `Dresden`,
+  `Greensboro`,
+  `Brooklyn`
+];
+
+export const getWaypoint = () => ({
   type: [
-    `Taxi`,
-    `Bus`,
-    `Train`,
-    `Ship`,
-    `Transport`,
-    `Drive`,
-    `Flight`,
-    `Check-in`,
-    `Sightseeing`,
-    `Restaurant`
-  ][getRandomInt(10)],
-  city: [
-    `Saint Petersburg`,
-    `Geneva`,
-    `Amsterdam`,
-    `Chamonix`,
-    `Moscow`,
-    `Samara`,
-    `Yekaterinburg`,
-    `Berlin`,
-    `Dresden`,
-    `Greensboro`,
-    `Brooklyn`
-  ][getRandomInt(11)],
+    {
+      transfer: [
+        `taxi`,
+        `bus`,
+        `train`,
+        `ship`,
+        `transport`,
+        `drive`,
+        `flight`,
+      ][getRandomInt(7)]
+    },
+    {
+      activity: [
+        `check-in`,
+        `sightseeing`,
+        `restaurant`
+      ][getRandomInt(3)]
+    }
+  ][getRandomInt(2)],
+  city: cities[getRandomInt(11)],
   photos: getSrcPhotos(),
   description: getRandomArray(`Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget.
   Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra.
@@ -53,33 +63,46 @@ export const waypoint = {
   sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui.
   Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat.
   Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus`.split(`. `), 3, 1).join(``),
-  data: [
-    Date.now(),
-    Date.now() + DAY,
-    Date.now() + DAY * 2
+  date: Date.now() + DAY + getRandomInt(3) * 24 * 60 * 60 * 1000,
+  time: [
+    {
+      start: `11:00`,
+      end: `12:30`
+    },
+    {
+      start: `11:00`,
+      end: `12:30`
+    },
+    {
+      start: `15:00`,
+      end: `16:00`
+    },
+    {
+      start: `17:00`,
+      end: `19:30`
+    }
   ][getRandomInt(3)],
-  time: new Set(),
+  price: getRandomInt(400, 20),
   options: getRandomArray([
     {
       title: `Add luggage`,
       price: 10,
-      isActive: Boolean(Math.round(Math.random()))
+      isApplied: Boolean(Math.round(Math.random()))
     },
     {
-      title: `Switch to comfort class`,
+      title: `Switch to comfort`,
       price: 150,
-      isActive: Boolean(Math.round(Math.random()))
+      isApplied: Boolean(Math.round(Math.random()))
     },
     {
       title: `Add meal`,
       price: 2,
-      isActive: Boolean(Math.round(Math.random()))
+      isApplied: Boolean(Math.round(Math.random()))
     },
     {
       title: `Choose seats`,
       price: 9,
-      isActive: Boolean(Math.round(Math.random()))
+      isApplied: Boolean(Math.round(Math.random()))
     }], 3, 0)
-};
-
+});
 
