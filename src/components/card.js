@@ -1,15 +1,4 @@
-export const createCardTemplate = ({type, city, date, time, price, options}) => `
-        <ul class="trip-days">
-            <li class="trip-days__item  day">
-              <div class="day__info">
-                <span class="day__counter">1</span>
-                <time class="day__date" datetime="${new Date(date).getFullYear()}-0${new Date(date).getMonth() + 1}-${new Date(date).getDate()}">${new Date(date).getMonth() + 1} ${new Date(date).getDate()}</time>
-              </div>
-              <ul class="trip-events__list">
-              </ul>
-            </li>
-        </ul>
-        <li class="trip-events__item">
+export const createCardTemplate = ({type, city, date, time, price, options}) => `<li class="trip-events__item">
             <div class="event">
               <div class="event__type">
                 <img class="event__type-icon" width="42" height="42" src="img/icons/${type[Object.keys(type)[0]]}.png" alt="Event type icon">
@@ -18,8 +7,7 @@ export const createCardTemplate = ({type, city, date, time, price, options}) => 
               <div class="event__schedule">
                 <p class="event__time">
                   ${Object.keys(time).map((it) => `<time class="event__${it}-time"
-                    datetime="${new Date(date).getFullYear()}-0${new Date(date).getMonth() + 1}-
-                    ${new Date(date).getDate()}T${time[it]}">${time[it]}</time>`).join(` &mdash; `)}
+                    datetime="${new Date(date).toISOString().slice(0, 11)}${time[it]}">${time[it]}</time>`).join(` &mdash; `)}
                 </p>
                 <p class="event__duration">${calculateDuration(date, time)}M</p>
               </div>

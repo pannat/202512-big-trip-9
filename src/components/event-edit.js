@@ -4,19 +4,19 @@ import {prepositionMap} from "./card";
 const EventType = {
   transfer:
     [
-      `taxi`,
-      `bus`,
-      `train`,
-      `ship`,
-      `transport`,
-      `drive`,
-      `flight`,
+      `Taxi`,
+      `Bus`,
+      `Train`,
+      `Ship`,
+      `Transport`,
+      `Drive`,
+      `Flight`,
     ],
   activity:
     [
-      `check-in`,
-      `sightseeing`,
-      `restaurant`
+      `Check-in`,
+      `Sightseeing`,
+      `Restaurant`
     ]
 };
 
@@ -48,8 +48,7 @@ const calculatePrice = (price, options) => {
   return price;
 };
 
-export const createEventEditTemplate = ({type, city, photos, description, date, time, price, options}) => {
-  return `<li class="trip-events__item">
+export const createEventEditTemplate = ({type, city, photos, description, date, time, price, options}) => `<li class="trip-events__item">
             <form class="event  event--edit" action="#" method="post">
               <header class="event__header">
                 <div class="event__type-wrapper">
@@ -65,7 +64,7 @@ export const createEventEditTemplate = ({type, city, photos, description, date, 
                       <div class="event__type-item">
                         <input id="event-type-${event}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${event}" 
                         ${event === type[Object.keys(type)[0]] ? `checked` : ``} >
-                        <label class="event__type-label  event__type-label--${event}" for="event-type-${event}-1">${event}</label>
+                        <label class="event__type-label  event__type-label--${event.toLowerCase()}" for="event-type-${event.toLowerCase()}-1">${event}</label>
                       </div>
                     `).join(``)}
                      </fieldset>
@@ -136,6 +135,4 @@ export const createEventEditTemplate = ({type, city, photos, description, date, 
                 </section>
               </section>
             </form>
-          </li>`;
-};
-
+          </li>`.trim();

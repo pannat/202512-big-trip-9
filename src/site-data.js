@@ -38,20 +38,20 @@ export const getWaypoint = () => ({
   type: [
     {
       transfer: [
-        `taxi`,
-        `bus`,
-        `train`,
-        `ship`,
-        `transport`,
-        `drive`,
-        `flight`,
+        `Taxi`,
+        `Bus`,
+        `Train`,
+        `Ship`,
+        `Transport`,
+        `Drive`,
+        `Flight`,
       ][getRandomInt(7)]
     },
     {
       activity: [
-        `check-in`,
-        `sightseeing`,
-        `restaurant`
+        `Check-in`,
+        `Sightseeing`,
+        `Restaurant`
       ][getRandomInt(3)]
     }
   ][getRandomInt(2)],
@@ -62,8 +62,8 @@ export const getWaypoint = () => ({
   Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae,
   sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui.
   Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat.
-  Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus`.split(`. `), 3, 1).join(``),
-  date: Date.now() + DAY + getRandomInt(3) * 24 * 60 * 60 * 1000,
+  Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus`.split(`. `), 4, 1).join(``),
+  date: Date.now() + DAY + getRandomInt(5) * 24 * 60 * 60 * 1000,
   time: [
     {
       start: `11:00`,
@@ -106,3 +106,28 @@ export const getWaypoint = () => ({
     }], 3, 0)
 });
 
+export const navItems = [
+  {
+    title: `Table`,
+    isActive: false,
+  },
+  {
+    title: `Stats`,
+    isActive: true,
+  },
+];
+
+export const filters = [
+  {
+    title: `Everything`,
+    isActive: true,
+  },
+  {
+    title: `Future`,
+    isActive: false,
+  },
+  {
+    title: `Past`,
+    isActive: false,
+  }
+];
