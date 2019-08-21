@@ -9,7 +9,7 @@ const getTripTitle = (waypoints) => {
   let citiesSet = new Set();
   waypoints.sort((a, b) => a.date - b.date).map((waypoint) => citiesSet.add(waypoint.city));
   let citiesArr = Array.from(citiesSet);
-  return citiesArr.length === 3 ? `${citiesArr[0]} &mdash; ${citiesArr[1]} &mdash; ${citiesArr[2]}` : `${citiesArr[0]} &mdash; ... &mdash; ${citiesArr[citiesArr.length - 1]}`
+  return citiesArr.length === 3 ? `${citiesArr[0]} &mdash; ${citiesArr[1]} &mdash; ${citiesArr[2]}` : `${citiesArr[0]} &mdash; ... &mdash; ${citiesArr[citiesArr.length - 1]}`;
 };
 
 const getTripDates = (waypoints) => {
