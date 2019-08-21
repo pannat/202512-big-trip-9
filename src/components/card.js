@@ -1,7 +1,7 @@
 export const createCardTemplate = ({type, city, date, time, price, options}) => `<li class="trip-events__item">
             <div class="event">
               <div class="event__type">
-                <img class="event__type-icon" width="42" height="42" src="img/icons/${type[Object.keys(type)[0]]}.png" alt="Event type icon">
+                <img class="event__type-icon" width="42" height="42" src="img/icons/${type[Object.keys(type)[0]].toLowerCase()}.png" alt="Event type icon">
               </div>
               <h3 class="event__title">${type[Object.keys(type)[0]]} ${prepositionMap[Object.keys(type)[0]]} ${city}</h3>
               <div class="event__schedule">
