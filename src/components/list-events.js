@@ -17,7 +17,7 @@ export const createListEventsTemplate = (waypoints) => `<ul class="trip-days">
 
 export const getUnicueDates = (waypoints) => {
   let dates = new Set();
-  waypoints.sort((a, b) => a.date - b.date).map((waypoint) => dates.add(new Date(waypoint.date).toDateString()));
+  waypoints.slice().sort((a, b) => a.date - b.date).map((waypoint) => dates.add(new Date(waypoint.date).toDateString()));
   return dates;
 };
 
