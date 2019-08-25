@@ -1,69 +1,78 @@
 import {cities} from "../site-data";
 import {prepositionMap} from "./card";
+import {createElement} from "./utils";
 
-const EventType = {
-  transfer:
-    [
-      `Taxi`,
-      `Bus`,
-      `Train`,
-      `Ship`,
-      `Transport`,
-      `Drive`,
-      `Flight`,
-    ],
-  activity:
-    [
-      `Check-in`,
-      `Sightseeing`,
-      `Restaurant`
-    ]
-};
-
-
-const offers = [
-  {
-    title: `Add luggage`,
-    price: 10,
-  },
-  {
-    title: `Switch to comfort class`,
-    price: 150,
-  },
-  {
-    title: `Add meal`,
-    price: 2,
-  },
-  {
-    title: `Choose seats`,
-    price: 9,
+export default class {
+  constructor({type, city, dueDate, time, price, options, description, photos}) {
+    this._eventTypes = {
+      transfer:
+        [
+          `Taxi`,
+          `Bus`,
+          `Train`,
+          `Ship`,
+          `Transport`,
+          `Drive`,
+          `Flight`,
+        ],
+      activity:
+        [
+          `Check-in`,
+          `Sightseeing`,
+          `Restaurant`
+        ]
+    };
+    this._cities = cities;
+    this._type = type;
+    this._keyType = Object.keys(type)[0];
+    this._city = city;
+    this._dueDate = new Date(dueDate);
+    this._time = time;
+    this._price = price;
+    this._options = options;
+    this._totalPrice = this.calculateTotalPrice(this._price, this._options);
+    this._description = description;
+    this._photos = Array.from(photos);
+    this._element = null;
   }
-];
 
-const calculatePrice = (price, options) => {
-  let costs = options.filter((option) => option.isApplied).map((it) => it.price);
-  for (let cost of costs) {
-    price += cost;
+  calculateTotalPrice(price, options) {
+    const costs = options.filter((option) => option.isApplied).map((it) => it.price);
+    for (let cost of costs) {
+      price += cost;
+    }
+    return price;
   }
-  return price;
-};
 
-export const createEventEditTemplate = ({type, city, photos, description, date, time, price, options}) => `<li class="trip-events__item">
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+
+  getTemplate() {
+    return `<li class="trip-events__item">
             <form class="event  event--edit" action="#" method="post">
               <header class="event__header">
                 <div class="event__type-wrapper">
                   <label class="event__type  event__type-btn" for="event-type-toggle-1">
                     <span class="visually-hidden">Choose event type</span>
-                    <img class="event__type-icon" width="17" height="17" src="img/icons/${type[Object.keys(type)[0]].toLowerCase()}.png" alt="Event type icon">
+                    <img class="event__type-icon" width="17" height="17" src="img/icons/${this._type[this._keyType].toLowerCase()}.png" alt="Event type icon">
                   </label>
                   <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
                   <div class="event__type-list">
-                  ${Object.keys(EventType).map((group) => `<fieldset class="event__type-group">
+                  ${Object.keys(this._eventTypes).map((group) => `<fieldset class="event__type-group">
                       <legend class="visually-hidden">${group}</legend>
-                      ${EventType[group].map((event) => `
+                      ${this._eventTypes[group].map((event) => `
                       <div class="event__type-item">
                         <input id="event-type-${event}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${event}" 
-                        ${event === type[Object.keys(type)[0]] ? `checked` : ``} >
+                        ${event === this._type[this._keyType] ? `checked` : ``} >
                         <label class="event__type-label  event__type-label--${event.toLowerCase()}" for="event-type-${event.toLowerCase()}-1">${event}</label>
                       </div>
                     `).join(``)}
@@ -73,17 +82,17 @@ export const createEventEditTemplate = ({type, city, photos, description, date, 
                 </div>
                 <div class="event__field-group  event__field-group--destination">
                   <label class="event__label  event__type-output" for="event-destination-1">
-                     ${type[Object.keys(type)[0]]} ${prepositionMap[Object.keys(type)[0]]} 
+                     ${this._type[this._keyType]} ${prepositionMap[[this._keyType]]} 
                   </label>
-                  <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${city}" list="destination-list-1">
+                  <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${this._city}" list="destination-list-1">
                   <datalist id="destination-list-1">
-                    ${cities.map((it) => `<option value="${it}"></option>`).join(``)}
+                    ${this._cities.map((city) => `<option value="${city}"></option>`).join(``)}
                   </datalist>
                 </div>
                 <div class="event__field-group  event__field-group--time">
-                  ${Object.keys(time).map((it) => `<label class="visually-hidden" for="event-start-${it}-1">${prepositionMap[it]}</label>
-                  <input class="event__input  event__input--time" id="event-${it}-time-1" type="text" name="event-${it}-time"
-                  value="${new Date(date).getDate()}/0${new Date(date).getMonth() + 1}/${String(new Date(date).getFullYear()).slice(2)} ${time[it]}">
+                  ${Object.keys(this._time).map((stage) => `<label class="visually-hidden" for="event-start-${stage}-1">${prepositionMap[stage]}</label>
+                  <input class="event__input  event__input--time" id="event-${stage}-time-1" type="text" name="event-${stage}-time"
+                  value="${this._dueDate.getDate()}/0${this._dueDate.getMonth() + 1}/${String(this._dueDate.getFullYear()).slice(2)} ${this._time[stage]}">
                   `).join(` &mdash; `)}
                   
                 </div>
@@ -93,7 +102,7 @@ export const createEventEditTemplate = ({type, city, photos, description, date, 
                     &euro;
                   </label>
                   <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" 
-                  value="${calculatePrice(price, options)}">
+                  value="${this._totalPrice}">
                 </div>
                 <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
                 <button class="event__reset-btn" type="reset">Delete</button>
@@ -112,27 +121,29 @@ export const createEventEditTemplate = ({type, city, photos, description, date, 
                 <section class="event__section  event__section--offers">
                   <h3 class="event__section-title  event__section-title--offers">Offers</h3>
                   <div class="event__available-offers">
-                  ${offers.map((offer) => `<div class="event__offer-selector">
-                      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.title}-1" type="checkbox" name="event-offer-${offer.title}" 
-                      ${options.filter((option) => option.isApplied).map((option) => option.title === offer.title ? `checked` : ``)}>
-                      <label class="event__offer-label" for="event-offer-${offer.title}-1">
-                        <span class="event__offer-title">${offer.title}</span>
+                  ${this._options.map((option) => `<div class="event__offer-selector">
+                      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${option.title}-1" type="checkbox" name="event-offer-${option.title}" 
+                      ${option.isApplied ? `checked` : ``}>
+                      <label class="event__offer-label" for="event-offer-${option.title}-1">
+                        <span class="event__offer-title">${option.title}</span>
                         &plus;
-                        &euro;&nbsp;<span class="event__offer-price">${offer.price}</span>
+                        &euro;&nbsp;<span class="event__offer-price">${option.price}</span>
                       </label>
                     </div>`).join(``)}
                   </div>
                 </section>
                 <section class="event__section  event__section--destination">
                   <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-                  <p class="event__destination-description">${description}</p>
+                  <p class="event__destination-description">${this._description}</p>
 
                   <div class="event__photos-container">
                     <div class="event__photos-tape">
-                      ${Array.from(photos).map((photo) => `<img class="event__photo" src="${photo}" alt="Event photo">`).join(``)}
+                      ${this._photos.map((photo) => `<img class="event__photo" src="${photo}" alt="Event photo">`).join(``)}
                     </div>
                   </div>
                 </section>
               </section>
             </form>
-          </li>`.trim();
+          </li>`;
+  }
+}

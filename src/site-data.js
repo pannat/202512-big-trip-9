@@ -34,7 +34,7 @@ export const cities = [
   `Brooklyn`
 ];
 
-export const getWaypoint = () => ({
+export const getPointMock = () => ({
   type: [
     {
       transfer: [
@@ -63,7 +63,7 @@ export const getWaypoint = () => ({
   sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui.
   Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat.
   Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus`.split(`. `), 4, 1).join(``),
-  date: Date.now() + DAY + getRandomInt(5) * 24 * 60 * 60 * 1000,
+  dueDate: Date.now() + DAY + getRandomInt(5) * 24 * 60 * 60 * 1000,
   time: [
     {
       start: `11:00`,
@@ -117,7 +117,7 @@ export const navItems = [
   },
 ];
 
-export const filters = [
+export const filterItems = [
   {
     title: `Everything`,
     isActive: true,
@@ -131,3 +131,4 @@ export const filters = [
     isActive: false,
   }
 ];
+
