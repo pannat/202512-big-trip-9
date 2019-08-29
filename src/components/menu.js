@@ -1,20 +1,9 @@
-import {createElement} from "./utils";
+import SuperClass from "./super-class";
 
-export default class {
+export default class extends SuperClass {
   constructor(items) {
+    super();
     this._items = items;
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 
   getTemplate() {
