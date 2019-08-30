@@ -1,21 +1,9 @@
-import {createElement} from "./utils";
+import SuperClass from "./super-class";
 
-export default class {
+export default class extends SuperClass {
   constructor(dates) {
+    super();
     this._unicueDates = dates;
-    this._element = null;
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 
   getTemplate() {

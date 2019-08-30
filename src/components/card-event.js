@@ -1,41 +1,23 @@
-import {createElement} from "./utils";
+import SuperClass from "./super-class";
+import {prepositionMap} from "../utils";
 
-export const prepositionMap = {
-  transfer: `to`,
-  activity: `in`,
-  start: `From`,
-  end: `To`
-};
-
-export default class {
+export default class extends SuperClass {
   constructor({type, city, dueDate, time, price, options}) {
+    super();
     this._type = type;
     this._keyType = Object.keys(type)[0];
     this._city = city;
     this._dueDate = new Date(dueDate);
     this._time = time;
-    this._duration = this.calculateDuration(this._dueDate, this._time);
+    this._duration = this._calculateDuration(this._dueDate, this._time);
     this._price = price;
     this._options = options;
-    this._element = null;
   }
 
-  calculateDuration(dueDate, time) {
+  _calculateDuration(dueDate, time) {
     const start = new Date(`${dueDate.toDateString()} ${time.start}`);
     const end = new Date(`${dueDate.toDateString()} ${time.end}`);
     return (end - start) / 1000 / 60;
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 
   getTemplate() {

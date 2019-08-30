@@ -34,7 +34,7 @@ export const cities = [
   `Brooklyn`
 ];
 
-export const getPointMock = () => ({
+export const getEventMock = () => ({
   type: [
     {
       transfer: [

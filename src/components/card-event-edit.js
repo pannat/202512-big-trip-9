@@ -1,9 +1,10 @@
 import {cities} from "../site-data";
-import {prepositionMap} from "./card";
-import {createElement} from "./utils";
+import {prepositionMap} from "../utils";
+import SuperClass from "./super-class";
 
-export default class {
+export default class extends SuperClass {
   constructor({type, city, dueDate, time, price, options, description, photos}) {
+    super();
     this._eventTypes = {
       transfer:
         [
@@ -22,38 +23,24 @@ export default class {
           `Restaurant`
         ]
     };
-    this._cities = cities;
     this._type = type;
     this._keyType = Object.keys(type)[0];
+    this._cities = cities;
     this._city = city;
     this._dueDate = new Date(dueDate);
     this._time = time;
     this._price = price;
     this._options = options;
-    this._totalPrice = this.calculateTotalPrice(this._price, this._options);
     this._description = description;
     this._photos = Array.from(photos);
-    this._element = null;
   }
 
-  calculateTotalPrice(price, options) {
+  _calculateTotalPrice(price, options) {
     const costs = options.filter((option) => option.isApplied).map((it) => it.price);
     for (let cost of costs) {
       price += cost;
     }
     return price;
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 
   getTemplate() {
@@ -102,7 +89,7 @@ export default class {
                     &euro;
                   </label>
                   <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" 
-                  value="${this._totalPrice}">
+                  value="${this._calculateTotalPrice(this._price, this._options)}">
                 </div>
                 <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
                 <button class="event__reset-btn" type="reset">Delete</button>

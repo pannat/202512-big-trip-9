@@ -3,6 +3,20 @@ export const Position = {
   BEFOREEND: `beforeend`
 };
 
+export const prepositionMap = {
+  transfer: `to`,
+  activity: `in`,
+  start: `From`,
+  end: `To`
+};
+
+export const getUniqueDates = (mocks) => {
+  let dates = new Set();
+  mocks.sort((a, b) => a.dueDate - b.dueDate).map((mock) => dates.add(new Date(mock.dueDate).toDateString()));
+  return Array.from(dates);
+};
+
+
 export const createElement = (template) => {
   const newElement = document.createElement(`div`);
   newElement.innerHTML = template;
