@@ -1,6 +1,6 @@
-import SuperClass from "./super-class";
+import AbstractComponent from "./abstract-component";
 
-export default class extends SuperClass {
+export default class extends AbstractComponent {
   constructor(pointMocks) {
     super();
     this._mocks = pointMocks;
@@ -15,7 +15,7 @@ export default class extends SuperClass {
 
   _getTripDates() {
     let uniqueDates = new Set();
-    this._mocks.forEach((mock) => uniqueDates.add(new Date(mock.date).toDateString()));
+    this._mocks.forEach((mock) => uniqueDates.add(new Date(mock.dueDate).toDateString()));
     let dates = Array.from(uniqueDates);
     return `${dates[0].slice(4, 11)} &mdash; ${dates[dates.length - 1].slice(7, 11)}`;
   }

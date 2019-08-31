@@ -10,12 +10,10 @@ export const prepositionMap = {
   end: `To`
 };
 
-export const getUniqueDates = (mocks) => {
-  let dates = new Set();
-  mocks.sort((a, b) => a.dueDate - b.dueDate).map((mock) => dates.add(new Date(mock.dueDate).toDateString()));
-  return Array.from(dates);
+export const Key = {
+  ESCAPE_IE: `Escape`,
+  ESCAPE: `Esc`,
 };
-
 
 export const createElement = (template) => {
   const newElement = document.createElement(`div`);

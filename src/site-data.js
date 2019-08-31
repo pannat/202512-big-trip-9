@@ -34,77 +34,79 @@ export const cities = [
   `Brooklyn`
 ];
 
-export const getEventMock = () => ({
-  type: [
-    {
-      transfer: [
-        `Taxi`,
-        `Bus`,
-        `Train`,
-        `Ship`,
-        `Transport`,
-        `Drive`,
-        `Flight`,
-      ][getRandomInt(7)]
-    },
-    {
-      activity: [
-        `Check-in`,
-        `Sightseeing`,
-        `Restaurant`
-      ][getRandomInt(3)]
-    }
-  ][getRandomInt(2)],
-  city: cities[getRandomInt(11)],
-  photos: getSrcPhotos(),
-  description: getRandomArray(`Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget.
+export const getEventMock = function () {
+  return ({
+    type: [
+      {
+        transfer: [
+          `Taxi`,
+          `Bus`,
+          `Train`,
+          `Ship`,
+          `Transport`,
+          `Drive`,
+          `Flight`,
+        ][getRandomInt(7)]
+      },
+      {
+        activity: [
+          `Check-in`,
+          `Sightseeing`,
+          `Restaurant`
+        ][getRandomInt(3)]
+      }
+    ][getRandomInt(2)],
+    city: cities[getRandomInt(11)],
+    photos: getSrcPhotos(),
+    description: getRandomArray(`Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget.
   Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra.
   Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae,
   sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui.
   Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat.
   Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus`.split(`. `), 4, 1).join(``),
-  dueDate: Date.now() + DAY + getRandomInt(5) * 24 * 60 * 60 * 1000,
-  time: [
-    {
-      start: `11:00`,
-      end: `12:30`
-    },
-    {
-      start: `11:00`,
-      end: `12:30`
-    },
-    {
-      start: `15:00`,
-      end: `16:00`
-    },
-    {
-      start: `17:00`,
-      end: `19:30`
-    }
-  ][getRandomInt(3)],
-  price: getRandomInt(400, 20),
-  options: getRandomArray([
-    {
-      title: `Add luggage`,
-      price: 10,
-      isApplied: Boolean(Math.round(Math.random()))
-    },
-    {
-      title: `Switch to comfort`,
-      price: 150,
-      isApplied: Boolean(Math.round(Math.random()))
-    },
-    {
-      title: `Add meal`,
-      price: 2,
-      isApplied: Boolean(Math.round(Math.random()))
-    },
-    {
-      title: `Choose seats`,
-      price: 9,
-      isApplied: Boolean(Math.round(Math.random()))
-    }], 3, 0)
-});
+    dueDate: Date.now() - 3 * DAY + getRandomInt(5) * 24 * 60 * 60 * 1000,
+    time: [
+      {
+        start: `11:00`,
+        end: `12:30`
+      },
+      {
+        start: `11:00`,
+        end: `12:30`
+      },
+      {
+        start: `15:00`,
+        end: `16:00`
+      },
+      {
+        start: `17:00`,
+        end: `19:30`
+      }
+    ][getRandomInt(3)],
+    price: getRandomInt(400, 20),
+    options: getRandomArray([
+      {
+        title: `Add luggage`,
+        price: 10,
+        isApplied: Boolean(Math.round(Math.random()))
+      },
+      {
+        title: `Switch to comfort`,
+        price: 150,
+        isApplied: Boolean(Math.round(Math.random()))
+      },
+      {
+        title: `Add meal`,
+        price: 2,
+        isApplied: Boolean(Math.round(Math.random()))
+      },
+      {
+        title: `Choose seats`,
+        price: 9,
+        isApplied: Boolean(Math.round(Math.random()))
+      }], 3, 0),
+  });
+};
 
 export const navItems = [
   {

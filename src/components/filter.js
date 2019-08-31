@@ -1,6 +1,6 @@
-import SuperClass from "./super-class";
+import AbstractComponent from "./abstract-component";
 
-export default class extends SuperClass {
+export default class extends AbstractComponent {
   constructor(filters) {
     super();
     this._items = filters;
