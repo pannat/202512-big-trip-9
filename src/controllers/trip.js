@@ -80,7 +80,7 @@ export default class {
   }
 
   _renderSortedList(sortedEvents) {
-    const day = new Day(new Date(Date.now()).toDateString(), 0);
+    const day = new Day();
     sortedEvents.forEach((event) => this._renderCard(event, day.getElement().querySelector(`.trip-events__list`)));
     render(this._daysListComponent.getElement(), day.getElement(), Position.AFTERBEGIN);
   }

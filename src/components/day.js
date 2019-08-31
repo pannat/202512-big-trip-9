@@ -10,8 +10,8 @@ export default class extends AbstractComponent {
   getTemplate() {
     return `<li class="trip-days__item  day">
               <div class="day__info">
-                <span class="day__counter">${this._count}</span>
-                 <time class="day__date" datetime="${new Date(this._date).toISOString().slice(0, 10)}">${this._date.slice(3, 10)}</time>
+                <span class="day__counter">${this._count ? this._count : ``}</span>
+                 <time class="day__date" datetime="${this._date ? new Date(this._date).toISOString().slice(0, 10) : ``}">${this._date ? this._date.slice(3, 10) : ``}</time>
               </div>
               <ul class="trip-events__list">
               </ul>
