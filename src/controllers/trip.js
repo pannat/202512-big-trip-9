@@ -102,6 +102,7 @@ export default class {
       case `time`:
         const sortedByDurationEvent = this._events.sort((a, b) => b.duration - a.duration);
         this._renderSortedList(sortedByDurationEvent);
+        break;
     }
   }
 }
