@@ -1,8 +1,8 @@
 import {cities} from "../site-data";
 import {prepositionMap} from "../utils";
-import SuperClass from "./super-class";
+import AbstractComponent from "./abstract-component";
 
-export default class extends SuperClass {
+export default class extends AbstractComponent {
   constructor({type, city, dueDate, time, price, options, description, photos}) {
     super();
     this._eventTypes = {

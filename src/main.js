@@ -3,7 +3,6 @@ import {Position, render} from "./utils";
 import Rout from "./components/rout";
 import Menu from "./components/menu";
 import Filter from "./components/filter";
-import Sorting from "./components/sorting";
 import TripController from "./controllers/trip";
 
 
@@ -29,11 +28,6 @@ const renderFilters = (filtersData) => {
   render(siteTripControlsElement, filters.getElement(), Position.BEFOREEND);
 };
 
-const renderSorting = () => {
-  const sorting = new Sorting();
-  render(siteTripEventsElement, sorting.getElement(), Position.BEFOREEND);
-};
-
 const getTotalCost = (cards, element) => {
   let cost = 0;
   for (let card of cards) {
@@ -45,11 +39,20 @@ const getTotalCost = (cards, element) => {
   element.textContent = cost;
 };
 
+const calculateDuration = (dueDate, time) => {
+  const start = new Date(`${dueDate.toDateString()} ${time.start}`);
+  const end = new Date(`${dueDate.toDateString()} ${time.end}`);
+  return (end - start) / 1000 / 60;
+};
+
 const eventMocks = new Array(COUNT_POINTS).fill(``).map(() => getEventMock()).sort((a, b) => a.dueDate - b.dueDate);
+eventMocks.forEach((eventMock) => {
+  eventMock.duration = calculateDuration(new Date(eventMock.dueDate), eventMock.time);
+});
+
 renderRout(eventMocks);
 renderMenu(navItems);
 renderFilters(filterItems);
-renderSorting();
 getTotalCost(eventMocks, siteTotalCostElement);
 
 const tripController = new TripController(siteTripEventsElement, eventMocks);

@@ -1,23 +1,17 @@
-import SuperClass from "./super-class";
+import AbstractComponent from "./abstract-component";
 import {prepositionMap} from "../utils";
 
-export default class extends SuperClass {
-  constructor({type, city, dueDate, time, price, options}) {
+export default class extends AbstractComponent {
+  constructor({type, city, dueDate, time, price, options, duration}) {
     super();
     this._type = type;
     this._keyType = Object.keys(type)[0];
     this._city = city;
     this._dueDate = new Date(dueDate);
     this._time = time;
-    this._duration = this._calculateDuration(this._dueDate, this._time);
+    this._duration = duration;
     this._price = price;
     this._options = options;
-  }
-
-  _calculateDuration(dueDate, time) {
-    const start = new Date(`${dueDate.toDateString()} ${time.start}`);
-    const end = new Date(`${dueDate.toDateString()} ${time.end}`);
-    return (end - start) / 1000 / 60;
   }
 
   getTemplate() {
