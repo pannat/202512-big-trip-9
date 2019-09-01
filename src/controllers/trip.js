@@ -1,4 +1,4 @@
-import {Position, Key, render} from "../utils";
+import {Position, Key, render, unrender} from "../utils";
 import DaysList from "../components/days-list";
 import Day from "../components/day";
 import CardEvent from "../components/card-event";
@@ -90,7 +90,10 @@ export default class {
       return;
     }
 
-    this._daysListComponent.getElement().innerHTML = ``;
+    unrender(this._daysListComponent.getElement());
+    this._daysListComponent.removeElement();
+
+    render(this._container, this._daysListComponent.getElement(), Position.BEFOREEND);
     switch (evt.target.dataset.sortType) {
       case `event`:
         this._uniqueDays.forEach((data, count) => this._renderDay(data, count));
