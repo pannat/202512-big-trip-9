@@ -2,7 +2,7 @@ import AbstractComponent from "./abstract-component";
 import moment from "moment";
 
 export default class extends AbstractComponent {
-  constructor(pointsNumber, date = undefined, dayNumber = undefined) {
+  constructor(pointsNumber, date, dayNumber) {
     super();
     this._date = date;
     this._dayNumber = dayNumber;
