@@ -1,4 +1,5 @@
 import AbstractComponent from "./abstract-component";
+import moment from "moment";
 
 export default class extends AbstractComponent {
   constructor(pointMocks) {
@@ -14,10 +15,7 @@ export default class extends AbstractComponent {
   }
 
   _getTripDates() {
-    let uniqueDates = new Set();
-    this._mocks.forEach((mock) => uniqueDates.add(new Date(mock.dueDate).toDateString()));
-    let dates = Array.from(uniqueDates);
-    return `${dates[0].slice(4, 11)} &mdash; ${dates[dates.length - 1].slice(7, 11)}`;
+    return `${moment(this._mocks[0].date).format(`MMM DD`)} &mdash; ${moment(this._mocks[this._mocks.length - 1].date).format(`DD MMM`)}`;
   }
 
   getTemplate() {
