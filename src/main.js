@@ -1,5 +1,5 @@
 import {getPointMock, navItems, filterItems} from "./site-data";
-import {Position, render} from "./utils";
+import {Position, render, calculateDuration} from "./utils";
 import Rout from "./components/rout";
 import Menu from "./components/menu";
 import Filter from "./components/filter";
@@ -39,7 +39,7 @@ const getTotalCost = (cards, element) => {
 };
 
 const pointMocks = new Array(COUNT_POINTS).fill(``).map(() => getPointMock()).sort((a, b) => a.date - b.date);
-
+pointMocks.forEach((pointMock) => calculateDuration(pointMock));
 
 renderRout(pointMocks);
 renderMenu(navItems);

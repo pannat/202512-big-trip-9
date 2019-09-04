@@ -17,9 +17,9 @@ export const Key = {
   ESCAPE: `Esc`,
 };
 
-export const calculateDuration = (date, time) => {
-  const formatedDate = moment(date).format(`YYYY-MM-DD`);
-  return moment(`${formatedDate} ${time.end}`).diff(`${formatedDate} ${time.start}`, `minutes`);
+export const calculateDuration = (point) => {
+  const formatedDate = moment(point.date).format(`YYYY-MM-DD`);
+  point.duration = moment(`${formatedDate} ${point.time.end}`).diff(`${formatedDate} ${point.time.start}`, `minutes`);
 };
 
 export const createElement = (template) => {

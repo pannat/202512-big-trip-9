@@ -1,4 +1,4 @@
-import {Position, render, unrender} from "../utils";
+import {calculateDuration, Position, render, unrender} from "../utils";
 import DaysList from "../components/days-list";
 import Day from "../components/day";
 import PointController from "./point";
@@ -11,13 +11,18 @@ export default class {
     this._points = points;
     this._daysListComponent = new DaysList();
     this._sortComponent = new Sort();
-    this._uniqueDays = this._getUniqueDays();
-    this._pointsDay = this._getPointsDay(this._uniqueDays);
+
+    this._subscriptions = [];
+    this._onChangeView = this._onChangeView.bind(this);
     this._onDataChange = this._onDataChange.bind(this);
+
+
+    this._getUniqueDays();
+    this._getPointsDays(this._uniqueDays);
   }
 
   init() {
-    this._uniqueDays.forEach((data, count) => this._renderDay(this._pointsDay[count], data, count));
+    this._uniqueDays.forEach((data, count) => this._renderDay(this._pointsDays[count], data, count));
 
     render(this._container, this._sortComponent.getElement(), Position.BEFOREEND);
     render(this._container, this._daysListComponent.getElement(), Position.BEFOREEND);
@@ -28,27 +33,33 @@ export default class {
 
   _onDataChange(newData, oldData) {
     this._points[this._points.findIndex((it) => it === oldData)] = newData;
+    this._points.forEach((point) => calculateDuration(point));
+    this._getUniqueDays();
+    this._getPointsDays(this._uniqueDays);
+
     this._renderTrip();
   }
 
+  _onChangeView() {
+    this._subscriptions.forEach((it) => it());
+  }
+
   _renderTrip() {
-    const uniqueDays = this._getUniqueDays();
-    const pointsDays = this._getPointsDay(uniqueDays);
     unrender(this._daysListComponent.getElement());
 
     this._daysListComponent.removeElement();
+    this._uniqueDays.forEach((data, count) => this._renderDay(this._pointsDays[count], data, count));
     render(this._container, this._daysListComponent.getElement(), Position.BEFOREEND);
-    uniqueDays.forEach((data, count) => this._renderDay(pointsDays[count], data, count));
   }
 
   _getUniqueDays() {
     let dates = new Set();
     this._points.forEach((point) => dates.add(moment(point.date).format(`MMM DD YYYY`)));
-    return Array.from(dates);
+    this._uniqueDays = Array.from(dates);
   }
 
-  _getPointsDay(uniqueDays) {
-    return uniqueDays.map((day) => this._points.filter((point) => moment(point.date).format(`MMM DD YYYY`) === day));
+  _getPointsDays(uniqueDays) {
+    this._pointsDays = uniqueDays.map((day) => this._points.filter((point) => moment(point.date).format(`MMM DD YYYY`) === day));
   }
 
   _renderDay(pointsDay, date, dayNumber) {
@@ -59,7 +70,8 @@ export default class {
   }
 
   _renderPoint(container, point) {
-    const pointController = new PointController(container, point, this._onDataChange);
+    const pointController = new PointController(container, point, this._onDataChange, this._onChangeView);
+    this._subscriptions.push(pointController.setDefaultView.bind(pointController));
   }
 
   _onSortInputClick(evt) {
@@ -81,7 +93,7 @@ export default class {
     render(this._container, this._daysListComponent.getElement(), Position.BEFOREEND);
     switch (evt.target.dataset.sortType) {
       case `event`:
-        this._uniqueDays.forEach((day, count) => this._renderDay(this._pointsDay[count], day, count));
+        this._uniqueDays.forEach((day, count) => this._renderDay(this._pointsDays[count], day, count));
         break;
       case `price`:
         const sortedByPricePoints = this._points.slice(0).sort((a, b) => b.price - a.price);

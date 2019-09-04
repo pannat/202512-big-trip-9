@@ -10,14 +10,14 @@ const offersPriceMap = {
   [`Choose seats`]: 9
 };
 
-const getTypes = (type) => {
-  const obj = {};
+const getType = (pointType) => {
+  const type = {};
   for (let group in pointTypes) {
-    if (group.indexOf(type)) {
-      obj[group] = type;
+    if (group.indexOf(pointType)) {
+      type[group] = pointType;
     }
   }
-  return obj;
+  return type;
 };
 
 
@@ -28,12 +28,14 @@ export default class {
     this._pointView = new Point(data);
     this._pointEdit = new PointEdit(data);
     this._onDataChange = onDataChange;
+    this._onChangeView = onChangeView;
 
     this.init();
   }
 
   init() {
     const openCardEdit = () => {
+      this._onChangeView();
       this._container.replaceChild(this._pointEdit.getElement(), this._pointView.getElement());
     };
     const closeCardEdit = () => {
@@ -69,6 +71,12 @@ export default class {
     render(this._container, this._pointView.getElement(), Position.BEFOREEND);
   }
 
+  setDefaultView() {
+    if (this._container.contains(this._pointEdit.getElement())) {
+      this._container.replaceChild(this._pointView.getElement(), this._pointEdit.getElement());
+    }
+  }
+
   _createNewData() {
     const formData = new FormData(this._pointEdit.getElement());
     const getSrcPhotos = () => {
@@ -87,7 +95,7 @@ export default class {
     };
 
     return {
-      type: getTypes(formData.get(`event-type`)),
+      type: getType(formData.get(`event-type`)),
       city: formData.get(`event-destination`),
       dueData: formData.get(`event-start-time`).split(` `)[0].split(`/`).join(`-`),
       time: {

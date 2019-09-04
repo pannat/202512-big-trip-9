@@ -1,16 +1,16 @@
 import AbstractComponent from "./abstract-component";
-import {prepositionMap, calculateDuration} from "../utils";
+import {prepositionMap} from "../utils";
 import moment from 'moment';
 
 export default class extends AbstractComponent {
-  constructor({type, city, date, time, price, options}) {
+  constructor({type, city, date, time, price, options, duration}) {
     super();
     this._type = type;
     this._keyType = Object.keys(type)[0];
     this._city = city;
     this._date = moment(date).format().slice(0, 11);
     this._time = time;
-    this._duration = calculateDuration(date, time);
+    this._duration = duration;
     this._price = price;
     this._options = options;
   }
