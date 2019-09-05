@@ -1,7 +1,7 @@
+import AbstractComponent from "./abstract-component";
 import {cities} from "../site-data";
 import {prepositionMap} from "../utils";
-import AbstractComponent from "./abstract-component";
-import moment from 'moment';
+import moment from "moment";
 
 export const pointTypes = {
   transfer:
@@ -23,14 +23,13 @@ export const pointTypes = {
 };
 
 export default class extends AbstractComponent {
-  constructor({type, city, date, time, price, options, description, photos}) {
+  constructor({type, city, dates, price, options, description, photos}) {
     super();
     this._type = type;
     this._keyType = Object.keys(type)[0];
     this._cities = cities;
     this._city = city;
-    this._date = moment(date).format(`DD/MM/YY`);
-    this._time = time;
+    this._dates = dates;
     this._price = price;
     this._options = options;
     this._description = description;
@@ -78,9 +77,9 @@ export default class extends AbstractComponent {
                   </datalist>
                 </div>
                 <div class="event__field-group  event__field-group--time">
-                  ${Object.keys(this._time).map((stage) => `<label class="visually-hidden" for="event-start-${stage}-1">${prepositionMap[stage]}</label>
+                  ${Object.keys(this._dates).map((stage) => `<label class="visually-hidden" for="event-start-${stage}-1">${prepositionMap[stage]}</label>
                   <input class="event__input  event__input--time" id="event-${stage}-time-1" type="text" name="event-${stage}-time"
-                  value="${this._date} ${this._time[stage]}">
+                  value="${moment(this._dates[stage]).format(`DD.MM.YYYY HH:mm`)}">
                   `).join(` &mdash; `)}
                   
                 </div>

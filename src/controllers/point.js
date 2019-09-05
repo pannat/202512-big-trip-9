@@ -2,6 +2,10 @@ import {Key, Position, render} from "../utils";
 import Point from "../components/point";
 import PointEdit from "../components/point-edit";
 import {pointTypes} from "../components/point-edit";
+import flatpickr from "flatpickr";
+import "flatpickr/dist/flatpickr.min.css";
+import "flatpickr/dist/themes/light.css";
+
 
 const offersPriceMap = {
   [`Add luggage`]: 10,
@@ -34,6 +38,22 @@ export default class {
   }
 
   init() {
+    flatpickr(this._pointEdit.getElement().querySelector(`input[name=event-start-time]`), {
+      altInput: true,
+      altFormat: `d.m.y H:m`,
+      enableTime: true,
+      dateFormat: `Y-m-d H:m`,
+      defaultDate: this._data.dates.start,
+    });
+
+    flatpickr(this._pointEdit.getElement().querySelector(`input[name=event-end-time]`), {
+      altInput: true,
+      altFormat: `d.m.y H:m`,
+      enableTime: true,
+      dateFormat: `Y-m-d H:m`,
+      defaultDate: this._data.dates.end,
+    });
+
     const openCardEdit = () => {
       this._onChangeView();
       this._container.replaceChild(this._pointEdit.getElement(), this._pointView.getElement());
@@ -90,17 +110,16 @@ export default class {
       return Array.from(optionsInputs).map((input) => ({
         title: input.name.slice(12),
         price: offersPriceMap[input.name.slice(12)],
-        isApplied: formData.get(input.name) ? true : false
+        isApplied: !!formData.get(input.name)
       }));
     };
 
     return {
       type: getType(formData.get(`event-type`)),
       city: formData.get(`event-destination`),
-      dueData: formData.get(`event-start-time`).split(` `)[0].split(`/`).join(`-`),
-      time: {
-        start: formData.get(`event-start-time`).split(` `)[1],
-        end: formData.get(`event-end-time`).split(` `)[1],
+      dates: {
+        start: Date.parse(formData.get(`event-start-time`)),
+        end: Date.parse(formData.get(`event-end-time`)),
       },
       photos: getSrcPhotos(),
       price: formData.get(`event-price`),

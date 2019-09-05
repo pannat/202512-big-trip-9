@@ -64,25 +64,10 @@ export const getPointMock = function () {
   sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui.
   Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat.
   Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus`.split(`. `), 4, 1).join(``),
-    date: Date.parse(moment().subtract(3, `days`).add(getRandomInt(6), `days`).year(2019).hours(0).minutes(0).seconds(0)),
-    time: [
-      {
-        start: `11:00`,
-        end: `12:30`
-      },
-      {
-        start: `11:00`,
-        end: `12:30`
-      },
-      {
-        start: `15:00`,
-        end: `16:00`
-      },
-      {
-        start: `17:00`,
-        end: `19:30`
-      }
-    ][getRandomInt(3)],
+    dates: {
+      start: Date.parse(moment().subtract(2, `days`).add(getRandomInt(6), `days`).hours(getRandomInt(13)).minutes(getRandomInt(60)).seconds(0)),
+      end: Date.parse(moment().subtract(2, `days`).add(getRandomInt(10, 6), `days`).hours(getRandomInt(24, 14)).minutes(getRandomInt(60)).seconds(0))
+    },
     price: getRandomInt(400, 20),
     options: getRandomArray([
       {

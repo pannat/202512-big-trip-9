@@ -18,8 +18,7 @@ export const Key = {
 };
 
 export const calculateDuration = (point) => {
-  const formatedDate = moment(point.date).format(`YYYY-MM-DD`);
-  point.duration = moment(`${formatedDate} ${point.time.end}`).diff(`${formatedDate} ${point.time.start}`, `minutes`);
+  point.duration = moment(point.dates.end).diff(moment(point.dates.start));
 };
 
 export const createElement = (template) => {

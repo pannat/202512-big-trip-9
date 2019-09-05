@@ -18,7 +18,7 @@ export default class {
 
 
     this._getUniqueDays();
-    this._getPointsDays(this._uniqueDays);
+    this._getPointsDays();
   }
 
   init() {
@@ -54,12 +54,12 @@ export default class {
 
   _getUniqueDays() {
     let dates = new Set();
-    this._points.forEach((point) => dates.add(moment(point.date).format(`MMM DD YYYY`)));
+    this._points.forEach((point) => dates.add(moment(point.dates.start).format(`MMM DD YYYY`)));
     this._uniqueDays = Array.from(dates);
   }
 
-  _getPointsDays(uniqueDays) {
-    this._pointsDays = uniqueDays.map((day) => this._points.filter((point) => moment(point.date).format(`MMM DD YYYY`) === day));
+  _getPointsDays() {
+    this._pointsDays = this._uniqueDays.map((day) => this._points.filter((point) => moment(point.dates.start).format(`MMM DD YYYY`) === day));
   }
 
   _renderDay(pointsDay, date, dayNumber) {

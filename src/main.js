@@ -38,7 +38,7 @@ const getTotalCost = (cards, element) => {
   element.textContent = cost;
 };
 
-const pointMocks = new Array(COUNT_POINTS).fill(``).map(() => getPointMock()).sort((a, b) => a.date - b.date);
+const pointMocks = new Array(COUNT_POINTS).fill(``).map(() => getPointMock()).sort((a, b) => a.dates.start - b.dates.start);
 pointMocks.forEach((pointMock) => calculateDuration(pointMock));
 
 renderRout(pointMocks);
