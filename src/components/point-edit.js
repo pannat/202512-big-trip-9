@@ -1,33 +1,35 @@
 import {cities} from "../site-data";
 import {prepositionMap} from "../utils";
 import AbstractComponent from "./abstract-component";
+import moment from 'moment';
+
+export const pointTypes = {
+  transfer:
+    [
+      `Taxi`,
+      `Bus`,
+      `Train`,
+      `Ship`,
+      `Transport`,
+      `Drive`,
+      `Flight`,
+    ],
+  activity:
+    [
+      `Check-in`,
+      `Sightseeing`,
+      `Restaurant`
+    ]
+};
 
 export default class extends AbstractComponent {
-  constructor({type, city, dueDate, time, price, options, description, photos}) {
+  constructor({type, city, date, time, price, options, description, photos}) {
     super();
-    this._eventTypes = {
-      transfer:
-        [
-          `Taxi`,
-          `Bus`,
-          `Train`,
-          `Ship`,
-          `Transport`,
-          `Drive`,
-          `Flight`,
-        ],
-      activity:
-        [
-          `Check-in`,
-          `Sightseeing`,
-          `Restaurant`
-        ]
-    };
     this._type = type;
     this._keyType = Object.keys(type)[0];
     this._cities = cities;
     this._city = city;
-    this._dueDate = new Date(dueDate);
+    this._date = moment(date).format(`DD/MM/YY`);
     this._time = time;
     this._price = price;
     this._options = options;
@@ -44,8 +46,7 @@ export default class extends AbstractComponent {
   }
 
   getTemplate() {
-    return `<li class="trip-events__item">
-            <form class="event  event--edit" action="#" method="post">
+    return `<form class="event  event--edit" action="#" method="post">
               <header class="event__header">
                 <div class="event__type-wrapper">
                   <label class="event__type  event__type-btn" for="event-type-toggle-1">
@@ -54,13 +55,13 @@ export default class extends AbstractComponent {
                   </label>
                   <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
                   <div class="event__type-list">
-                  ${Object.keys(this._eventTypes).map((group) => `<fieldset class="event__type-group">
+                  ${Object.keys(pointTypes).map((group) => `<fieldset class="event__type-group">
                       <legend class="visually-hidden">${group}</legend>
-                      ${this._eventTypes[group].map((event) => `
+                      ${pointTypes[group].map((type) => `
                       <div class="event__type-item">
-                        <input id="event-type-${event}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${event}" 
-                        ${event === this._type[this._keyType] ? `checked` : ``} >
-                        <label class="event__type-label  event__type-label--${event.toLowerCase()}" for="event-type-${event.toLowerCase()}-1">${event}</label>
+                        <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}" 
+                        ${type === this._type[this._keyType] ? `checked` : ``} >
+                        <label class="event__type-label  event__type-label--${type.toLowerCase()}" for="event-type-${type.toLowerCase()}-1">${type}</label>
                       </div>
                     `).join(``)}
                      </fieldset>
@@ -79,7 +80,7 @@ export default class extends AbstractComponent {
                 <div class="event__field-group  event__field-group--time">
                   ${Object.keys(this._time).map((stage) => `<label class="visually-hidden" for="event-start-${stage}-1">${prepositionMap[stage]}</label>
                   <input class="event__input  event__input--time" id="event-${stage}-time-1" type="text" name="event-${stage}-time"
-                  value="${this._dueDate.getDate()}/0${this._dueDate.getMonth() + 1}/${String(this._dueDate.getFullYear()).slice(2)} ${this._time[stage]}">
+                  value="${this._date} ${this._time[stage]}">
                   `).join(` &mdash; `)}
                   
                 </div>
@@ -130,7 +131,6 @@ export default class extends AbstractComponent {
                   </div>
                 </section>
               </section>
-            </form>
-          </li>`;
+            </form>`;
   }
 }

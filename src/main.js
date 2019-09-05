@@ -1,10 +1,9 @@
-import {getEventMock, navItems, filterItems} from "./site-data";
-import {Position, render} from "./utils";
+import {getPointMock, navItems, filterItems} from "./site-data";
+import {Position, render, calculateDuration} from "./utils";
 import Rout from "./components/rout";
 import Menu from "./components/menu";
 import Filter from "./components/filter";
 import TripController from "./controllers/trip";
-
 
 const COUNT_POINTS = 4;
 
@@ -39,21 +38,13 @@ const getTotalCost = (cards, element) => {
   element.textContent = cost;
 };
 
-const calculateDuration = (dueDate, time) => {
-  const start = new Date(`${dueDate.toDateString()} ${time.start}`);
-  const end = new Date(`${dueDate.toDateString()} ${time.end}`);
-  return (end - start) / 1000 / 60;
-};
+const pointMocks = new Array(COUNT_POINTS).fill(``).map(() => getPointMock()).sort((a, b) => a.date - b.date);
+pointMocks.forEach((pointMock) => calculateDuration(pointMock));
 
-const eventMocks = new Array(COUNT_POINTS).fill(``).map(() => getEventMock()).sort((a, b) => a.dueDate - b.dueDate);
-eventMocks.forEach((eventMock) => {
-  eventMock.duration = calculateDuration(new Date(eventMock.dueDate), eventMock.time);
-});
-
-renderRout(eventMocks);
+renderRout(pointMocks);
 renderMenu(navItems);
 renderFilters(filterItems);
-getTotalCost(eventMocks, siteTotalCostElement);
+getTotalCost(pointMocks, siteTotalCostElement);
 
-const tripController = new TripController(siteTripEventsElement, eventMocks);
+const tripController = new TripController(siteTripEventsElement, pointMocks);
 tripController.init();

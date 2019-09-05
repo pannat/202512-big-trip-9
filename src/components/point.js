@@ -1,13 +1,14 @@
 import AbstractComponent from "./abstract-component";
 import {prepositionMap} from "../utils";
+import moment from 'moment';
 
 export default class extends AbstractComponent {
-  constructor({type, city, dueDate, time, price, options, duration}) {
+  constructor({type, city, date, time, price, options, duration}) {
     super();
     this._type = type;
     this._keyType = Object.keys(type)[0];
     this._city = city;
-    this._dueDate = new Date(dueDate);
+    this._date = moment(date).format().slice(0, 11);
     this._time = time;
     this._duration = duration;
     this._price = price;
@@ -15,8 +16,7 @@ export default class extends AbstractComponent {
   }
 
   getTemplate() {
-    return `<li class="trip-events__item">
-            <div class="event">
+    return `<div class="event">
               <div class="event__type">
                 <img class="event__type-icon" width="42" height="42" src="img/icons/${this._type[this._keyType].toLowerCase()}.png" alt="Event type icon">
               </div>
@@ -24,7 +24,7 @@ export default class extends AbstractComponent {
               <div class="event__schedule">
                 <p class="event__time">
                   ${Object.keys(this._time).map((stage) => `<time class="event__${stage}-time"
-                    datetime="${this._dueDate.toISOString().slice(0, 11)}${this._time[stage]}">${this._time[stage]}</time>`).join(` &mdash; `)}
+                    datetime="${this._date}${this._time[stage]}">${this._time[stage]}</time>`).join(` &mdash; `)}
                 </p>
                 <p class="event__duration">${this._duration}M</p>
               </div>
@@ -43,7 +43,6 @@ export default class extends AbstractComponent {
               <button class="event__rollup-btn" type="button">
                 <span class="visually-hidden">Open event</span>
               </button>
-            </div>
-          </li>`;
+            </div>`;
   }
 }

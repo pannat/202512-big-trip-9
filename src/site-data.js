@@ -1,5 +1,5 @@
+import moment from "moment";
 const COUNT_PHOTOS = 5;
-const DAY = 24 * 60 * 60 * 1000;
 
 const getRandomInt = (max, min = 0) => Math.floor(Math.random() * (max - min)) + min;
 
@@ -34,7 +34,7 @@ export const cities = [
   `Brooklyn`
 ];
 
-export const getEventMock = function () {
+export const getPointMock = function () {
   return ({
     type: [
       {
@@ -64,7 +64,7 @@ export const getEventMock = function () {
   sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui.
   Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat.
   Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus`.split(`. `), 4, 1).join(``),
-    dueDate: Date.now() - 3 * DAY + getRandomInt(5) * 24 * 60 * 60 * 1000,
+    date: Date.parse(moment().subtract(3, `days`).add(getRandomInt(6), `days`).year(2019).hours(0).minutes(0).seconds(0)),
     time: [
       {
         start: `11:00`,
