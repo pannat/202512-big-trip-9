@@ -19,12 +19,12 @@ export default class extends AbstractComponent {
   }
 
   _setFormatUnitTime(unit) {
-    return unit > 9 ? unit : `0` + String(unit);
+    return unit > 9 ? unit : `0${unit}`;
   }
 
   _formatDuration() {
-    return `${Number(this._duration.day) ? this._duration.day + `D` : ``} ${Number(this._duration.hours) && this._duration.day ? this._duration.hours + `H` : ``}
-    ${this._duration.minutes + `M`}`;
+    return `${Number(this._duration.day) ? `${this._duration.day}D` : ``} ${Number(this._duration.hours) && Number(this._duration.day) ? `${this._duration.hours}H` : ``}
+    ${this._duration.minutes}M`;
   }
 
   getTemplate() {
