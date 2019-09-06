@@ -44,14 +44,19 @@ export default class {
       enableTime: true,
       dateFormat: `Y-m-d H:m`,
       defaultDate: this._data.dates.start,
+      minDate: this._data.dates.start,
+      onChange(selectedDates) {
+        calendarEnd.config.minDate = new Date(selectedDates);
+      }
     });
 
-    flatpickr(this._pointEdit.getElement().querySelector(`input[name=event-end-time]`), {
+    const calendarEnd = flatpickr(this._pointEdit.getElement().querySelector(`input[name=event-end-time]`), {
       altInput: true,
       altFormat: `d.m.y H:m`,
       enableTime: true,
       dateFormat: `Y-m-d H:m`,
       defaultDate: this._data.dates.end,
+      minDate: this._data.dates.start,
     });
 
     const openCardEdit = () => {
