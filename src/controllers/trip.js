@@ -1,4 +1,4 @@
-import {calculateDuration, Position, render, unrender} from "../utils";
+import {Position, render, unrender} from "../utils";
 import DaysList from "../components/days-list";
 import Day from "../components/day";
 import PointController from "./point";
@@ -16,7 +16,7 @@ export default class {
     this._onChangeView = this._onChangeView.bind(this);
     this._onDataChange = this._onDataChange.bind(this);
 
-
+    this._calculateDurationPoints();
     this._getUniqueDays();
     this._getPointsDays();
   }
@@ -29,6 +29,12 @@ export default class {
 
     this._sortComponent.getElement()
       .addEventListener(`click`, (evt) => this._onSortInputClick(evt));
+  }
+
+  _calculateDurationPoints() {
+    for (const point of this._points) {
+      point.duration = moment(point.dates.end).diff(moment(point.dates.start));
+    }
   }
 
   _getUniqueDays() {
@@ -73,7 +79,8 @@ export default class {
 
   _onDataChange(newData, oldData) {
     this._points[this._points.findIndex((it) => it === oldData)] = newData;
-    this._points.sort((a, b) => a.dates.start - b.dates.start).forEach((point) => calculateDuration(point));
+    this._points.sort((a, b) => a.dates.start - b.dates.start);
+    this._calculateDurationPoints();
     this._getUniqueDays();
     this._getPointsDays(this._uniqueDays);
 

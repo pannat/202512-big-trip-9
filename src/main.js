@@ -39,7 +39,6 @@ const getTotalCost = (cards, element) => {
 };
 
 const pointMocks = new Array(COUNT_POINTS).fill(``).map(() => getPointMock());
-pointMocks.forEach((pointMock) => calculateDuration(pointMock));
 
 renderRout(pointMocks);
 renderMenu(navItems);

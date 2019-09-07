@@ -1,5 +1,3 @@
-import moment from "moment";
-
 export const Position = {
   AFTERBEGIN: `afterbegin`,
   BEFOREEND: `beforeend`
@@ -15,10 +13,6 @@ export const prepositionMap = {
 export const Key = {
   ESCAPE_IE: `Escape`,
   ESCAPE: `Esc`,
-};
-
-export const calculateDuration = (point) => {
-  point.duration = moment(point.dates.end).diff(moment(point.dates.start));
 };
 
 export const createElement = (template) => {
