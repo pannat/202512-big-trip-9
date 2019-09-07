@@ -1,5 +1,5 @@
 import {getPointMock, navItems, filterItems} from "./site-data";
-import {Position, render, calculateDuration} from "./utils";
+import {Position, render} from "./utils";
 import Rout from "./components/rout";
 import Menu from "./components/menu";
 import Filter from "./components/filter";
