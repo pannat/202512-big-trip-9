@@ -8,7 +8,7 @@ import moment from "moment";
 export default class {
   constructor(container, points) {
     this._container = container;
-    this._points = points;
+    this._points = points.sort((a, b) => a.dates.start - b.dates.start);
     this._daysListComponent = new DaysList();
     this._sortComponent = new Sort();
 
@@ -41,28 +41,16 @@ export default class {
     this._pointsDays = this._uniqueDays.map((day) => this._points.filter((point) => moment(point.dates.start).format(`MMM DD YYYY`) === day));
   }
 
-  _renderDay(pointsDay, date, dayNumber) {
-    this._dayComponent = new Day(pointsDay.length, date, dayNumber);
-    const pointsContainers = this._dayComponent.getElement().querySelectorAll(`.trip-events__item`);
-    pointsDay.forEach((point, index) => this._renderPoint(pointsContainers[index], point));
-    render(this._daysListComponent.getElement(), this._dayComponent.getElement(), Position.BEFOREEND);
+  _renderDay(points, date, dayNumber) {
+    const day = new Day(points.length, date, dayNumber);
+    const pointsContainers = day.getElement().querySelectorAll(`.trip-events__item`);
+    points.forEach((point, index) => this._renderPoint(pointsContainers[index], point));
+    render(this._daysListComponent.getElement(), day.getElement(), Position.BEFOREEND);
   }
 
   _renderPoint(container, point) {
     const pointController = new PointController(container, point, this._onDataChange, this._onChangeView);
     this._subscriptions.push(pointController.setDefaultView.bind(pointController));
-  }
-
-  _renderSortedByDateList() {
-    this._uniqueDays.forEach((data, count) => this._renderDay(this._pointsDays[count], data, count));
-  }
-
-  _renderSortedList(sortedPoints) {
-    const day = new Day(sortedPoints.length);
-
-    const pointsContainers = day.getElement().querySelectorAll(`.trip-events__item`);
-    sortedPoints.forEach((point, index) => this._renderPoint(pointsContainers[index], point));
-    render(this._daysListComponent.getElement(), day.getElement(), Position.AFTERBEGIN);
   }
 
   _renderTrip(element) {
@@ -71,13 +59,13 @@ export default class {
 
     switch (element.dataset.sortType) {
       case `event`:
-        this._renderSortedByDateList();
+        this._uniqueDays.forEach((data, count) => this._renderDay(this._pointsDays[count], data, count));
         break;
       case `price`:
-        this._renderSortedList(this._points.slice(0).sort((a, b) => b.price - a.price));
+        this._renderDay(this._points.slice(0).sort((a, b) => b.price - a.price));
         break;
       case `time`:
-        this._renderSortedList(this._points.sort((a, b) => b.duration - a.duration));
+        this._renderDay(this._points.sort((a, b) => b.duration - a.duration));
         break;
     }
     render(this._container, this._daysListComponent.getElement(), Position.BEFOREEND);
@@ -85,7 +73,7 @@ export default class {
 
   _onDataChange(newData, oldData) {
     this._points[this._points.findIndex((it) => it === oldData)] = newData;
-    this._points.forEach((point) => calculateDuration(point));
+    this._points.sort((a, b) => a.dates.start - b.dates.start).forEach((point) => calculateDuration(point));
     this._getUniqueDays();
     this._getPointsDays(this._uniqueDays);
 
