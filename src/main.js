@@ -47,3 +47,4 @@ getTotalCost(pointMocks, siteTotalCostElement);
 
 const tripController = new TripController(siteTripEventsElement, pointMocks);
 tripController.init();
+

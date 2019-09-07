@@ -8,7 +8,7 @@ import moment from "moment";
 export default class {
   constructor(container, points) {
     this._container = container;
-    this._points = points.sort((a, b) => a.dates.start - b.dates.start);
+    this._points = points.slice(0).sort((a, b) => a.dates.start - b.dates.start);
     this._daysListComponent = new DaysList();
     this._sortComponent = new Sort();
 
