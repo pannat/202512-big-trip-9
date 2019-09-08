@@ -3,16 +3,28 @@ import {prepositionMap} from "../utils";
 import moment from 'moment';
 
 export default class extends AbstractComponent {
-  constructor({type, city, date, time, price, options, duration}) {
+  constructor({type, city, dates, price, options, duration}) {
     super();
     this._type = type;
     this._keyType = Object.keys(type)[0];
     this._city = city;
-    this._date = moment(date).format().slice(0, 11);
-    this._time = time;
-    this._duration = duration;
+    this._dates = dates;
+    this._duration = {
+      day: this._setFormatUnitTime(moment.duration(duration).days()),
+      hours: this._setFormatUnitTime(moment.duration(duration).hours()),
+      minutes: this._setFormatUnitTime(moment.duration(duration).minutes())
+    };
     this._price = price;
     this._options = options;
+  }
+
+  _setFormatUnitTime(unit) {
+    return unit > 9 ? unit : `0${unit}`;
+  }
+
+  _formatDuration() {
+    return `${Number(this._duration.day) ? `${this._duration.day}D` : ``} ${Number(this._duration.hours) && Number(this._duration.day) ? `${this._duration.hours}H` : ``}
+    ${this._duration.minutes}M`;
   }
 
   getTemplate() {
@@ -23,10 +35,10 @@ export default class extends AbstractComponent {
               <h3 class="event__title">${this._type[this._keyType]} ${prepositionMap[this._keyType]} ${this._city}</h3>
               <div class="event__schedule">
                 <p class="event__time">
-                  ${Object.keys(this._time).map((stage) => `<time class="event__${stage}-time"
-                    datetime="${this._date}${this._time[stage]}">${this._time[stage]}</time>`).join(` &mdash; `)}
+                  ${Object.keys(this._dates).map((stage) => `<time class="event__${stage}-time"
+                    datetime="${moment(this._dates[stage]).format(`YYYY-MM-DDTHH:mm`)}">${moment(this._dates[stage]).format(`HH:mm`)}</time>`).join(` &mdash; `)}
                 </p>
-                <p class="event__duration">${this._duration}M</p>
+                <p class="event__duration">${this._formatDuration()}</p>
               </div>
               <p class="event__price">
                 &euro;&nbsp;<span class="event__price-value">${this._price}</span>

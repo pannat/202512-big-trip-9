@@ -1,5 +1,5 @@
 import {getPointMock, navItems, filterItems} from "./site-data";
-import {Position, render, calculateDuration} from "./utils";
+import {Position, render} from "./utils";
 import Rout from "./components/rout";
 import Menu from "./components/menu";
 import Filter from "./components/filter";
@@ -38,8 +38,7 @@ const getTotalCost = (cards, element) => {
   element.textContent = cost;
 };
 
-const pointMocks = new Array(COUNT_POINTS).fill(``).map(() => getPointMock()).sort((a, b) => a.date - b.date);
-pointMocks.forEach((pointMock) => calculateDuration(pointMock));
+const pointMocks = new Array(COUNT_POINTS).fill(``).map(() => getPointMock());
 
 renderRout(pointMocks);
 renderMenu(navItems);
@@ -48,3 +47,4 @@ getTotalCost(pointMocks, siteTotalCostElement);
 
 const tripController = new TripController(siteTripEventsElement, pointMocks);
 tripController.init();
+
