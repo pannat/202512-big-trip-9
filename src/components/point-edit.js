@@ -36,21 +36,14 @@ export default class extends AbstractComponent {
     this._photos = Array.from(photos);
   }
 
-  _calculateTotalPrice(price, options) {
-    const costs = options.filter((option) => option.isApplied).map((it) => it.price);
-    for (let cost of costs) {
-      price += cost;
-    }
-    return price;
-  }
-
   getTemplate() {
     return `<form class="event  event--edit" action="#" method="post">
               <header class="event__header">
                 <div class="event__type-wrapper">
                   <label class="event__type  event__type-btn" for="event-type-toggle-1">
                     <span class="visually-hidden">Choose event type</span>
-                    <img class="event__type-icon" width="17" height="17" src="img/icons/${this._type[this._keyType].toLowerCase()}.png" alt="Event type icon">
+                    <img class="event__type-icon" width="17" height="17" src="img/icons/${this._type[this._keyType].toLowerCase()}.png"
+                    alt="Event type icon">
                   </label>
                   <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
                   <div class="event__type-list">
@@ -81,7 +74,6 @@ export default class extends AbstractComponent {
                   <input class="event__input  event__input--time" id="event-${stage}-time-1" type="text" name="event-${stage}-time"
                   value="${moment(this._dates[stage]).format(`DD.MM.YYYY HH:mm`)}">
                   `).join(` &mdash; `)}
-                  
                 </div>
                 <div class="event__field-group  event__field-group--price">
                   <label class="event__label" for="event-price-1">
@@ -89,7 +81,7 @@ export default class extends AbstractComponent {
                     &euro;
                   </label>
                   <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" 
-                  value="${this._calculateTotalPrice(this._price, this._options)}">
+                  value="${this._price}">
                 </div>
                 <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
                 <button class="event__reset-btn" type="reset">Delete</button>
