@@ -93,17 +93,6 @@ export const getPointMock = function () {
   });
 };
 
-export const navItems = [
-  {
-    title: `Table`,
-    isActive: false,
-  },
-  {
-    title: `Stats`,
-    isActive: true,
-  },
-];
-
 export const filterItems = [
   {
     title: `Everything`,
