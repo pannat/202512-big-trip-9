@@ -23,8 +23,8 @@ export default class extends AbstractComponent {
   }
 
   _formatDuration() {
-    return `${+this._duration.day ? `${this._duration.day}D` : ``}
-    ${+this._duration.hours && +this._duration.day ? `${this._duration.hours}H` : ``} ${this._duration.minutes}M`;
+    return `${+this._duration.day ? `${this._duration.day}D ${this._duration.hours}H` :
+      `${+this._duration.hours ? `${this._duration.hours}H` : ``}` } ${this._duration.minutes}M`;
   }
 
   getTemplate() {
