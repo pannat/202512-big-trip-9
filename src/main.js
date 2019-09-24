@@ -23,10 +23,10 @@ const menuItemStats = menu.getElement().querySelector(`[data-menu-item = Stats]`
 const filters = new Filter(filterItems);
 const stats = new Stats();
 
-const tripController = new TripController(siteTripEventsElement, pointMocks, siteTotalCostElement, siteTripInfoElement);
 render(siteTripControlsElement, menu.getElement(), Position.AFTERBEGIN);
 render(siteTripControlsElement, filters.getElement(), Position.BEFOREEND);
 render(sitePageMainContainerElement, stats.getElement(), Position.BEFOREEND);
+const tripController = new TripController(siteTripEventsElement, pointMocks, siteTotalCostElement, siteTripInfoElement);
 
 menu.getElement().addEventListener(`click`, (evt) => {
   evt.preventDefault();
@@ -55,4 +55,9 @@ menu.getElement().addEventListener(`click`, (evt) => {
 
 siteButtonNewPointElement.addEventListener(`click`, () => {
   tripController.createNewPoint();
+});
+
+
+filters.getElement().addEventListener(`click`, (evt) => {
+  tripController.appliesFilterToList(evt.target);
 });

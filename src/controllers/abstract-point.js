@@ -1,4 +1,3 @@
-import {pointTypes} from "../components/point-edit";
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 import "flatpickr/dist/themes/light.css";
@@ -66,18 +65,8 @@ export default class AbstractPointController {
       }));
     };
 
-    const getType = (pointType) => {
-      const type = {};
-      for (let group in pointTypes) {
-        if (pointTypes[group].indexOf(pointType) >= 0) {
-          type[group] = pointType;
-        }
-      }
-      return type;
-    };
-
     return {
-      type: getType(formData.get(`event-type`)),
+      type: formData.get(`event-type`).toLowerCase(),
       city: formData.get(`event-destination`),
       dates: {
         start: Date.parse(formData.get(`event-start-time`)),

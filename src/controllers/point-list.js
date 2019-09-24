@@ -2,7 +2,7 @@ import moment from "moment";
 import Day from "../components/day";
 import PointController from "./point";
 import NewPointController from "./new-point";
-import {Position, render} from "../utils";
+import {Position, render, getUniqueList} from "../utils";
 import {cities} from "../site-data";
 
 
@@ -11,22 +11,22 @@ export default class {
     this._container = container;
     this._points = points;
     this._subscriptions = [];
+    this._uniqueDays = [];
+    this._pointsDays = [];
+
 
     this._onChangeView = this._onChangeView.bind(this);
     this._onDataChange = onDataChange;
 
-    this._calculateDurationPoints();
     this._getUniqueDays();
     this._getPointsDays();
 
     this._init();
   }
 
-  createNewPoint() {
+  createNewPoint(container) {
     const defaultPoint = {
-      type: {
-        transfer: `Taxi`
-      },
+      type: `taxi`,
       city: cities[0],
       dates: {
         start: Date.parse(moment()),
@@ -38,14 +38,13 @@ export default class {
       options: []
     };
 
-    this._createPoint(this._container, defaultPoint, NewPointController);
+    this._createPoint(container, defaultPoint, NewPointController);
   }
 
   renderPointList(element, points, container) {
     this._points = points;
     this._container = container;
 
-    this._calculateDurationPoints();
     switch (element.dataset.sortType) {
       case `event`:
         this._getUniqueDays();
@@ -69,16 +68,8 @@ export default class {
     this._subscriptions.forEach((it) => it());
   }
 
-  _calculateDurationPoints() {
-    for (const point of this._points) {
-      point.duration = moment(point.dates.end).diff(moment(point.dates.start));
-    }
-  }
-
   _getUniqueDays() {
-    let dates = new Set();
-    this._points.forEach((point) => dates.add(moment(point.dates.start).format(`MMM DD YYYY`)));
-    this._uniqueDays = Array.from(dates);
+    this._uniqueDays = getUniqueList(this._points.map((point) => moment(point.dates.start).format(`MMM DD YYYY`)));
   }
 
   _getPointsDays() {

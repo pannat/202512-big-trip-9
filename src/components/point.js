@@ -1,44 +1,31 @@
 import AbstractComponent from "./abstract-component";
-import {prepositionMap} from "../utils";
+import {prepositionMap, formatDuration} from "../utils";
 import moment from 'moment';
 
 export default class extends AbstractComponent {
   constructor({type, city, dates, price, options, duration}) {
     super();
-    this._type = type;
-    this._keyType = Object.keys(type)[0];
+    this._type = `${type[0].toUpperCase()}${type.slice(1)}`;
+    this._preposition = prepositionMap[type];
     this._city = city;
     this._dates = dates;
-    this._duration = {
-      day: this._setFormatUnitTime(moment.duration(duration).days()),
-      hours: this._setFormatUnitTime(moment.duration(duration).hours()),
-      minutes: this._setFormatUnitTime(moment.duration(duration).minutes())
-    };
+    this._duration = formatDuration(duration);
     this._price = price;
     this._options = options;
-  }
-
-  _setFormatUnitTime(unit) {
-    return unit > 9 ? unit : `0${unit}`;
-  }
-
-  _formatDuration() {
-    return `${+this._duration.day ? `${this._duration.day}D ${this._duration.hours}H` :
-      `${+this._duration.hours ? `${this._duration.hours}H` : ``}` } ${this._duration.minutes}M`;
   }
 
   getTemplate() {
     return `<div class="event">
               <div class="event__type">
-                <img class="event__type-icon" width="42" height="42" src="img/icons/${this._type[this._keyType].toLowerCase()}.png" alt="Event type icon">
+                <img class="event__type-icon" width="42" height="42" src="img/icons/${this._type}.png" alt="Event type icon">
               </div>
-              <h3 class="event__title">${this._type[this._keyType]} ${prepositionMap[this._keyType]} ${this._city}</h3>
+              <h3 class="event__title">${this._type} ${this._preposition} ${this._city}</h3>
               <div class="event__schedule">
                 <p class="event__time">
                   ${Object.keys(this._dates).map((stage) => `<time class="event__${stage}-time"
                     datetime="${moment(this._dates[stage]).format(`YYYY-MM-DDTHH:mm`)}">${moment(this._dates[stage]).format(`HH:mm`)}</time>`).join(` &mdash; `)}
                 </p>
-                <p class="event__duration">${this._formatDuration()}</p>
+                <p class="event__duration">${this._duration}</p>
               </div>
               <p class="event__price">
                 &euro;&nbsp;<span class="event__price-value">${this._price}</span>
