@@ -7,8 +7,8 @@ import moment from "moment";
 export default class extends AbstractComponent {
   constructor({type, city, dates, price, options, description, photos}) {
     super();
-    this._type = type;
-    this._keyType = Object.keys(type)[0];
+    this._type = `${type[0].toUpperCase()}${type.slice(1)}`;
+    this._preposition = prepositionMap[type];
     this._cities = cities;
     this._city = city;
     this._dates = dates;
@@ -24,7 +24,7 @@ export default class extends AbstractComponent {
               <div class="event__type-wrapper">
                 <label class="event__type  event__type-btn" for="event-type-toggle-1">
                   <span class="visually-hidden">Choose event type</span>
-                  <img class="event__type-icon" width="17" height="17" src="img/icons/${this._type[this._keyType].toLowerCase()}.png" alt="Event type icon">
+                  <img class="event__type-icon" width="17" height="17" src="img/icons/${this._type.toLowerCase()}.png" alt="Event type icon">
                 </label>
                 <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
@@ -34,7 +34,7 @@ export default class extends AbstractComponent {
                       ${pointTypes[group].map((type) => `
                       <div class="event__type-item">
                         <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}" 
-                        ${type === this._type[this._keyType] ? `checked` : ``} >
+                        ${type === this._type.toLowerCase() ? `checked` : ``} >
                         <label class="event__type-label  event__type-label--${type.toLowerCase()}" for="event-type-${type.toLowerCase()}-1">${type}</label>
                       </div>
                     `).join(``)}
@@ -45,7 +45,7 @@ export default class extends AbstractComponent {
 
               <div class="event__field-group  event__field-group--destination">
                 <label class="event__label  event__type-output" for="event-destination-1">
-                  ${this._type[this._keyType]} ${prepositionMap[[this._keyType]]} 
+                  ${this._type} ${this._preposition} 
                 </label>
                 <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${this._city}" list="destination-list-1">
                 <datalist id="destination-list-1">

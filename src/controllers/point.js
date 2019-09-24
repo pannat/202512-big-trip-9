@@ -8,10 +8,10 @@ export default class extends AbstractPointController {
   constructor(container, data, onDataChange, onChangeView) {
     super(container, data, onDataChange, onChangeView, PointEdit);
     this._pointView = new Point(data);
-    this.create();
+    this._create();
   }
 
-  create() {
+  _create() {
     const openCardEdit = () => {
       this._onChangeView();
       this._container.replaceChild(this._pointEdit.getElement(), this._pointView.getElement());
@@ -46,7 +46,13 @@ export default class extends AbstractPointController {
 
     this._pointEdit.getElement().addEventListener(`submit`, (evt) => {
       evt.preventDefault();
-      this._onDataChange(this._createNewData(), this._data);
+
+      const newData = this._createNewData();
+      if (newData === this._data) {
+        closeCardEdit();
+      } else {
+        this._onDataChange(newData, this._data);
+      }
 
       document.addEventListener(`keydown`, onEscKeyDown);
     });

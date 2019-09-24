@@ -36,26 +36,7 @@ export const cities = [
 
 export const getPointMock = function () {
   return ({
-    type: [
-      {
-        transfer: [
-          `Taxi`,
-          `Bus`,
-          `Train`,
-          `Ship`,
-          `Transport`,
-          `Drive`,
-          `Flight`,
-        ][getRandomInt(7)]
-      },
-      {
-        activity: [
-          `Check-in`,
-          `Sightseeing`,
-          `Restaurant`
-        ][getRandomInt(3)]
-      }
-    ][getRandomInt(2)],
+    type: [`taxi`, `bus`, `train`, `flight`, `check-in`, `sightseeing`][getRandomInt(6)],
     city: cities[getRandomInt(11)],
     photos: getSrcPhotos(),
     description: getRandomArray(`Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget.
