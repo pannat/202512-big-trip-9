@@ -1,43 +1,69 @@
 import {getUniqueList, Position, render, unrender} from "../utils";
 import DaysList from "../components/days-list";
-import PointListController from "./point-list";
 import Sort from "../components/sort.js";
 import TripInfo from "../components/trip-info";
+import Filter from "../components/filter";
 import moment from "moment";
 import StatsController from "./stats";
+import PointListController from "./point-list";
 
 export default class {
-  constructor(container, points, tripTotalCostElement, tripInfoContainerElement) {
+  constructor(container, points, tripTotalCostElement, tripInfoContainerElement, filterContainerElement) {
     this._container = container;
     this._points = points.slice(0).sort((a, b) => a.dates.start - b.dates.start);
     this._pointsSortedByEndDate = this._points.slice(0).sort((a, b) => b.dates.end - a.dates.end);
+    this._calculateDurationPoints();
+
     this._sortComponent = new Sort();
     this._daysListComponent = new DaysList();
     this._tripInfoComponent = new TripInfo();
-    this._calculateDurationPoints();
+    this._filterComponent = new Filter();
+
     this._pointListController = new PointListController(this._daysListComponent.getElement(), this._points, this._onDataChange.bind(this));
     this._statsController = new StatsController(this._points);
+
     this._tripTotalCostElement = tripTotalCostElement;
     this._tripInfoContainerElement = tripInfoContainerElement;
     this._tripInfoTitleElement = this._tripInfoComponent.getElement().querySelector(`.trip-info__title`);
     this._tripInfoDatesElement = this._tripInfoComponent.getElement().querySelector(`.trip-info__dates`);
+    this._filterContainerElement = filterContainerElement;
 
     this._init();
   }
 
   show() {
     this._container.classList.remove(`trip-events--hidden`);
+    this._filterComponent.getElement().classList.remove(`visually-hidden`);
   }
 
   hide() {
     this._container.classList.add(`trip-events--hidden`);
+    this._filterComponent.getElement().classList.add(`visually-hidden`);
   }
 
   createNewPoint() {
     this._pointListController.createNewPoint(this._daysListComponent.getElement());
   }
 
-  appliesFilterToList(filter) {
+  _init() {
+    this._tripTotalCostElement.textContent = this._calculateTotalCost();
+    this._tripInfoTitleElement.textContent = this._getTripInfoTitle();
+    this._tripInfoDatesElement.textContent = this._getTripInfoDates();
+
+    render(this._tripInfoContainerElement, this._tripInfoComponent.getElement(), Position.AFTERBEGIN);
+    render(this._container, this._sortComponent.getElement(), Position.BEFOREEND);
+    render(this._container, this._daysListComponent.getElement(), Position.BEFOREEND);
+    render(this._filterContainerElement, this._filterComponent.getElement(), Position.BEFOREEND);
+
+    this._filterComponent.getElement().addEventListener(`click`, (evt) => {
+      this._appliesFilterToList(evt.target);
+    });
+
+    this._sortComponent.getElement()
+      .addEventListener(`click`, (evt) => this._onSortInputClick(evt));
+  }
+
+  _appliesFilterToList(filter) {
     unrender(this._daysListComponent.getElement());
     this._daysListComponent.removeElement();
 
@@ -56,19 +82,6 @@ export default class {
     }
 
     render(this._container, this._daysListComponent.getElement(), Position.BEFOREEND);
-  }
-
-  _init() {
-    this._tripTotalCostElement.textContent = this._calculateTotalCost();
-    this._tripInfoTitleElement.textContent = this._getTripInfoTitle();
-    this._tripInfoDatesElement.textContent = this._getTripInfoDates();
-
-    render(this._tripInfoContainerElement, this._tripInfoComponent.getElement(), Position.AFTERBEGIN);
-    render(this._container, this._sortComponent.getElement(), Position.BEFOREEND);
-    render(this._container, this._daysListComponent.getElement(), Position.BEFOREEND);
-
-    this._sortComponent.getElement()
-      .addEventListener(`click`, (evt) => this._onSortInputClick(evt));
   }
 
   _calculateDurationPoints() {
@@ -123,7 +136,7 @@ export default class {
       this._tripTotalCostElement.textContent = this._calculateTotalCost();
       this._tripInfoTitleElement.textContent = this._getTripInfoTitle();
       this._tripInfoDatesElement.textContent = this._getTripInfoDates();
-      this.appliesFilterToList(document.querySelector(`.trip-filters__filter-input:checked`));
+      this._appliesFilterToList(this._filterComponent.getElement().querySelector(`.trip-filters__filter-input:checked`));
       this._statsController.updateCharts(this._points);
     } else {
       this._tripTotalCostElement.textContent = 0;
@@ -140,9 +153,6 @@ export default class {
       return;
     }
 
-    unrender(this._daysListComponent.getElement());
-    this._daysListComponent.removeElement();
-    this.appliesFilterToList(document.querySelector(`.trip-filters__filter-input:checked`));
-    render(this._container, this._daysListComponent.getElement(), Position.BEFOREEND);
+    this._appliesFilterToList(this._filterComponent.getElement().querySelector(`.trip-filters__filter-input:checked`));
   }
 }
