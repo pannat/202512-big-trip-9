@@ -4,6 +4,7 @@ export default class extends AbstractComponent {
   constructor() {
     super();
   }
+
   getTemplate() {
     return `<section class="statistics visually-hidden">
           <h2 class="visually-hidden">Trip statistics</h2>

@@ -189,6 +189,7 @@ export default class {
               beginAtZero: true,
               display: false
             },
+            minBarLength: 70
           }],
           yAxes: [{
             position: `left`,
@@ -202,7 +203,6 @@ export default class {
             },
             labels: this._uniquePointTypes.map((type) => type.toUpperCase()),
             barPercentage: 0.8,
-            minBarLength: 55
           }]
         },
         legend: {

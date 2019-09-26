@@ -74,18 +74,3 @@ export const getPointMock = function () {
   });
 };
 
-export const filterItems = [
-  {
-    title: `Everything`,
-    isActive: true,
-  },
-  {
-    title: `Future`,
-    isActive: false,
-  },
-  {
-    title: `Past`,
-    isActive: false,
-  }
-];
-

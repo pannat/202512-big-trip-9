@@ -1,7 +1,6 @@
-import {getPointMock, filterItems} from "./site-data";
+import {getPointMock} from "./site-data";
 import {Position, render} from "./utils";
 import Menu from "./components/menu";
-import Filter from "./components/filter";
 import Stats from "./components/stats";
 import TripController from "./controllers/trip";
 
@@ -18,15 +17,13 @@ const siteTripEventsElement = sitePageMainContainerElement.querySelector(`.trip-
 
 const pointMocks = new Array(COUNT_POINTS).fill(``).map(() => getPointMock());
 const menu = new Menu();
+const stats = new Stats();
 const menuItemTable = menu.getElement().querySelector(`[data-menu-item = Table]`);
 const menuItemStats = menu.getElement().querySelector(`[data-menu-item = Stats]`);
-const filters = new Filter(filterItems);
-const stats = new Stats();
 
 render(siteTripControlsElement, menu.getElement(), Position.AFTERBEGIN);
-render(siteTripControlsElement, filters.getElement(), Position.BEFOREEND);
 render(sitePageMainContainerElement, stats.getElement(), Position.BEFOREEND);
-const tripController = new TripController(siteTripEventsElement, pointMocks, siteTotalCostElement, siteTripInfoElement);
+const tripController = new TripController(siteTripEventsElement, pointMocks, siteTotalCostElement, siteTripInfoElement, siteTripControlsElement);
 
 menu.getElement().addEventListener(`click`, (evt) => {
   evt.preventDefault();
@@ -39,14 +36,12 @@ menu.getElement().addEventListener(`click`, (evt) => {
     case menuItemTable:
       tripController.show();
       stats.getElement().classList.add(`visually-hidden`);
-      filters.getElement().classList.remove(`visually-hidden`);
       menuItemTable.classList.add(`trip-tabs__btn--active`);
       menuItemStats.classList.remove(`trip-tabs__btn--active`);
       break;
     case menuItemStats:
       tripController.hide();
       stats.getElement().classList.remove(`visually-hidden`);
-      filters.getElement().classList.add(`visually-hidden`);
       menuItemTable.classList.remove(`trip-tabs__btn--active`);
       menuItemStats.classList.add(`trip-tabs__btn--active`);
       break;
@@ -55,9 +50,4 @@ menu.getElement().addEventListener(`click`, (evt) => {
 
 siteButtonNewPointElement.addEventListener(`click`, () => {
   tripController.createNewPoint();
-});
-
-
-filters.getElement().addEventListener(`click`, (evt) => {
-  tripController.appliesFilterToList(evt.target);
 });
