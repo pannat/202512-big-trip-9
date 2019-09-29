@@ -8,44 +8,31 @@ import StatsController from "./stats";
 import PointListController from "./point-list";
 
 export default class {
-  constructor(container, points, tripTotalCostElement, tripInfoContainerElement, filterContainerElement) {
+  constructor(container, tripTotalCostElement, tripInfoContainerElement, filterContainerElement) {
     this._container = container;
-    this._points = points.slice(0).sort((a, b) => a.dates.start - b.dates.start);
-    this._pointsSortedByEndDate = this._points.slice(0).sort((a, b) => b.dates.end - a.dates.end);
-    this._calculateDurationPoints();
-
+    this._points = [];
+    this._pointsSortedByEndDate = [];
     this._sortComponent = new Sort();
     this._daysListComponent = new DaysList();
     this._tripInfoComponent = new TripInfo();
     this._filterComponent = new Filter();
 
-    this._pointListController = new PointListController(this._daysListComponent.getElement(), this._points, this._onDataChange.bind(this));
-    this._statsController = new StatsController(this._points);
+    this._pointListController = null;
+    this._statsController = null;
 
     this._tripTotalCostElement = tripTotalCostElement;
     this._tripInfoContainerElement = tripInfoContainerElement;
     this._tripInfoTitleElement = this._tripInfoComponent.getElement().querySelector(`.trip-info__title`);
     this._tripInfoDatesElement = this._tripInfoComponent.getElement().querySelector(`.trip-info__dates`);
     this._filterContainerElement = filterContainerElement;
-
-    this._init();
   }
 
-  show() {
-    this._container.classList.remove(`trip-events--hidden`);
-    this._filterComponent.getElement().classList.remove(`visually-hidden`);
-  }
+  init(points) {
+    this._points = points.slice(0).sort((a, b) => a.dates.start - b.dates.start);
+    this._pointsSortedByEndDate = this._points.slice(0).sort((a, b) => b.dates.end - a.dates.end);
+    this._pointListController = new PointListController(this._daysListComponent.getElement(), this._points, this._onDataChange.bind(this));
+    this._statsController = new StatsController(this._points);
 
-  hide() {
-    this._container.classList.add(`trip-events--hidden`);
-    this._filterComponent.getElement().classList.add(`visually-hidden`);
-  }
-
-  createNewPoint() {
-    this._pointListController.createNewPoint(this._daysListComponent.getElement());
-  }
-
-  _init() {
     this._tripTotalCostElement.textContent = this._calculateTotalCost();
     this._tripInfoTitleElement.textContent = this._getTripInfoTitle();
     this._tripInfoDatesElement.textContent = this._getTripInfoDates();
@@ -63,16 +50,30 @@ export default class {
       .addEventListener(`click`, (evt) => this._onSortInputClick(evt));
   }
 
-  _appliesFilterToList(filter) {
+  show() {
+    this._container.classList.remove(`trip-events--hidden`);
+    this._filterComponent.getElement().classList.remove(`visually-hidden`);
+  }
+
+  hide() {
+    this._container.classList.add(`trip-events--hidden`);
+    this._filterComponent.getElement().classList.add(`visually-hidden`);
+  }
+
+  createNewPoint() {
+    this._pointListController.createNewPoint(this._daysListComponent.getElement());
+  }
+
+  _appliesFilterToList(element) {
     unrender(this._daysListComponent.getElement());
     this._daysListComponent.removeElement();
 
-    switch (filter.value) {
+    switch (element.dataset.filterType) {
       case `everything`:
         this._pointListController.renderPointList(this._sortComponent.getElement().querySelector(`.trip-sort__input:checked`), this._points, this._daysListComponent.getElement());
         break;
       case `future`:
-        const filteredPointsByFuture = this._points.filter(({dates}) => dates.start > moment().add(1, `day`));
+        const filteredPointsByFuture = this._points.filter(({dates}) => dates.start > moment());
         this._pointListController.renderPointList(this._sortComponent.getElement().querySelector(`.trip-sort__input:checked`), filteredPointsByFuture, this._daysListComponent.getElement());
         break;
       case `past`:
@@ -82,12 +83,6 @@ export default class {
     }
 
     render(this._container, this._daysListComponent.getElement(), Position.BEFOREEND);
-  }
-
-  _calculateDurationPoints() {
-    for (const point of this._points) {
-      point.duration = moment(point.dates.end).diff(moment(point.dates.start));
-    }
   }
 
   _getUniqueCities() {
@@ -129,7 +124,6 @@ export default class {
     this._daysListComponent.removeElement();
 
     if (this._points.length) {
-      this._calculateDurationPoints();
       this._points.sort((a, b) => a.dates.start - b.dates.start);
 
       this._pointsSortedByEndDate = this._points.slice(0).sort((a, b) => b.dates.end - a.dates.end);

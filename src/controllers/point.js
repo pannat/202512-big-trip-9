@@ -14,8 +14,8 @@ export default class extends AbstractPointController {
   _create() {
     const openCardEdit = () => {
       this._onChangeView();
-      this._container.replaceChild(this._pointEdit.getElement(), this._pointView.getElement());
       this._initializeCalendars();
+      this._container.replaceChild(this._pointEdit.getElement(), this._pointView.getElement());
     };
     const closeCardEdit = () => {
       this._container.replaceChild(this._pointView.getElement(), this._pointEdit.getElement());

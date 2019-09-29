@@ -2,15 +2,14 @@ import {Key, Position, render, unrender} from "../utils";
 import AbstractPointController from "./abstract-point";
 import PointAdd from "../components/point-add";
 
-
 export default class extends AbstractPointController {
   constructor(container, data, onDataChange, onChangeView) {
     super(container, data, onDataChange, onChangeView, PointAdd);
 
-    this.create();
+    this._create();
   }
 
-  create() {
+  _create() {
     const onEscKeyDown = (evt) => {
       if (evt.key === Key.ESCAPE || evt.key === Key.ESCAPE_IE) {
         unrender(this._pointEdit.getElement());

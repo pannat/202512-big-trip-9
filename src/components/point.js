@@ -1,25 +1,19 @@
-import AbstractComponent from "./abstract-component";
-import {prepositionMap, formatDuration} from "../utils";
+import {formatDuration} from "../utils";
 import moment from 'moment';
+import AbstractPoint from "./abstract-point";
 
-export default class extends AbstractComponent {
+export default class extends AbstractPoint {
   constructor({type, city, dates, price, options, duration}) {
-    super();
-    this._type = `${type[0].toUpperCase()}${type.slice(1)}`;
-    this._preposition = prepositionMap[type];
-    this._city = city;
-    this._dates = dates;
+    super({type, city, dates, price, options});
     this._duration = formatDuration(duration);
-    this._price = price;
-    this._options = options;
   }
 
   getTemplate() {
     return `<div class="event">
               <div class="event__type">
-                <img class="event__type-icon" width="42" height="42" src="img/icons/${this._type.toLowerCase()}.png" alt="Event type icon">
+                <img class="event__type-icon" width="42" height="42" src="img/icons/${this._choosenType.toLowerCase()}.png" alt="Event type icon">
               </div>
-              <h3 class="event__title">${this._type} ${this._preposition} ${this._city}</h3>
+              <h3 class="event__title">${this._choosenType} ${this._preposition} ${this._city}</h3>
               <div class="event__schedule">
                 <p class="event__time">
                   ${Object.keys(this._dates).map((stage) => `<time class="event__${stage}-time"
@@ -32,7 +26,7 @@ export default class extends AbstractComponent {
               </p>
               <h4 class="visually-hidden">Offers:</h4>
               <ul class="event__selected-offers">
-                  ${this._options.filter((option) => option.isApplied).map((option) => `<li class="event__offer">
+                  ${this._options.filter((option) => option.accepted).map((option) => `<li class="event__offer">
                     <span class="event__offer-title">${option.title}</span>
                     +
                     &euro;

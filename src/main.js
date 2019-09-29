@@ -1,11 +1,11 @@
-import {getPointMock} from "./site-data";
 import {Position, render} from "./utils";
 import Menu from "./components/menu";
 import Stats from "./components/stats";
 import TripController from "./controllers/trip";
+import API from "./api";
 
-
-const COUNT_POINTS = 4;
+const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAo=${Math.random()}`;
+const END_POINT = `https://htmlacademy-es-9.appspot.com/big-trip`;
 
 const siteTripMainElement = document.querySelector(`.trip-main`);
 const siteTripInfoElement = siteTripMainElement.querySelector(`.trip-info`);
@@ -14,8 +14,17 @@ const siteTripControlsElement = siteTripMainElement.querySelector(`.trip-control
 const siteButtonNewPointElement = siteTripMainElement.querySelector(`.trip-main__event-add-btn`);
 const sitePageMainContainerElement = document.querySelector(`.page-main .page-body__container`);
 const siteTripEventsElement = sitePageMainContainerElement.querySelector(`.trip-events`);
+const api = new API(END_POINT, AUTHORIZATION);
+const tripController = new TripController(siteTripEventsElement, siteTotalCostElement, siteTripInfoElement, siteTripControlsElement);
 
-const pointMocks = new Array(COUNT_POINTS).fill(``).map(() => getPointMock());
+api.getDestinations()
+  .then(api.getOffers())
+  .then(api.getPoints()
+    .then((points) => {
+      tripController.init(points);
+    }));
+
+
 const menu = new Menu();
 const stats = new Stats();
 const menuItemTable = menu.getElement().querySelector(`[data-menu-item = Table]`);
@@ -23,7 +32,6 @@ const menuItemStats = menu.getElement().querySelector(`[data-menu-item = Stats]`
 
 render(siteTripControlsElement, menu.getElement(), Position.AFTERBEGIN);
 render(sitePageMainContainerElement, stats.getElement(), Position.BEFOREEND);
-const tripController = new TripController(siteTripEventsElement, pointMocks, siteTotalCostElement, siteTripInfoElement, siteTripControlsElement);
 
 menu.getElement().addEventListener(`click`, (evt) => {
   evt.preventDefault();

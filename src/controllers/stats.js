@@ -1,7 +1,6 @@
 import Chart from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
-import {pointTypes as pointTypesMap} from "../components/point-edit";
-import {formatDuration, getUniqueList} from "../utils";
+import {formatDuration, getUniqueList, groupToType} from "../utils";
 
 export default class {
   constructor(points) {
@@ -70,7 +69,8 @@ export default class {
             },
             labels: this._uniquePointTypes.map((type) => type.toUpperCase()),
             barThickness: `flex`,
-            minBarLength: 35
+            minBarLength: 35,
+            maxBarThickness: 40
           }]
         },
         legend: {
@@ -136,7 +136,8 @@ export default class {
             },
             labels: this._uniquePointTypesTransfer.map((type) => type.toUpperCase()),
             barPercentage: 0.8,
-            minBarLength: 55
+            minBarLength: 55,
+            maxBarThickness: 40
           }]
         },
         legend: {
@@ -202,7 +203,7 @@ export default class {
               fontColor: `#000000`,
             },
             labels: this._uniquePointTypes.map((type) => type.toUpperCase()),
-            barPercentage: 0.8,
+            maxBarThickness: 40
           }]
         },
         legend: {
@@ -233,7 +234,7 @@ export default class {
   _structureData(data) {
     this._pointsTypes = data.map((point) => point.type);
     this._uniquePointTypes = getUniqueList(this._pointsTypes);
-    this._pointTypesTransfer = this._pointsTypes.filter((type) => pointTypesMap.transfer.includes(type));
+    this._pointTypesTransfer = this._pointsTypes.filter((type) => groupToType.transfer.includes(type));
     this._uniquePointTypesTransfer = getUniqueList(this._pointTypesTransfer);
     this._countTransportTrips = this._pointTypesTransfer.reduce((acc, it) => {
       acc[it] = (acc[it] || 0) + 1;

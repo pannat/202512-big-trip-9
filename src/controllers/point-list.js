@@ -3,7 +3,6 @@ import Day from "../components/day";
 import PointController from "./point";
 import NewPointController from "./new-point";
 import {Position, render, getUniqueList} from "../utils";
-import {cities} from "../site-data";
 
 
 export default class {
@@ -26,13 +25,13 @@ export default class {
 
   createNewPoint(container) {
     const defaultPoint = {
-      type: `taxi`,
-      city: cities[0],
+      type: ``,
+      city: ``,
       dates: {
         start: Date.parse(moment()),
         end: Date.parse(moment().add(1, `hours`)),
       },
-      photos: new Set(),
+      photos: [],
       price: +0,
       description: ``,
       options: []

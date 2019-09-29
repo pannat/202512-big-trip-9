@@ -5,20 +5,14 @@ export const Position = {
   BEFOREEND: `beforeend`
 };
 
-export const prepositionMap = {
-  taxi: `to`,
-  bus: `to`,
-  train: `to`,
-  flight: `to`,
-  [`check-in`]: `in`,
-  sightseeing: `in`,
-  start: `From`,
-  end: `To`
-};
-
 export const Key = {
   ESCAPE_IE: `Escape`,
   ESCAPE: `Esc`,
+};
+
+export const groupToType = {
+  transfer: [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`],
+  activity: [`Check-in`, `Sightseeing`, `Restaurant`]
 };
 
 export const getUniqueList = (list) => Array.from(new Set(list));
