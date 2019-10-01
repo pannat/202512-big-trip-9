@@ -5,7 +5,12 @@ import OffersComponent from "../components/offers";
 import DestinationComponent from "../components/destination";
 import {getPreposition, render, unrender, Position} from "../utils";
 
-export default class AbstractPointController {
+const Input = {
+  TYPE: `event-type`,
+  DESTINATION: `event-destination`
+};
+
+class AbstractPointController {
   constructor(container, data, onDataChange, onChangeView, Point) {
     this._container = container;
     this._data = data;
@@ -13,8 +18,6 @@ export default class AbstractPointController {
     this._onDataChange = onDataChange;
     this._onChangeView = onChangeView;
     this._pointEdit = new Point(data, this._cities);
-    this._fieldDestination = this._pointEdit.getElement().querySelector(`.event__input--destination`);
-    this._listPointType = this._pointEdit.getElement().querySelector(`.event__type-list`);
     this._offersComponent = new OffersComponent(data.offers);
     this._destinationComponent = new DestinationComponent(data);
     this._containerEventDetails = this._pointEdit.getElement().querySelector(`.event__details`);
@@ -27,35 +30,10 @@ export default class AbstractPointController {
   }
 
   _init() {
-    this._listPointType.addEventListener(`change`, (evt) => this._onPointTypeInputChange(evt));
-
-    this._fieldDestination.addEventListener(`change`, (evt) => this._onPointDestinationInputChange(evt));
-  }
-
-  _createOffers(data) {
-    this._offersComponent = new OffersComponent(data);
-    render(this._containerEventDetails, this._offersComponent.getElement(), Position.AFTERBEGIN);
-  }
-
-  _createDestination(destination) {
-    this._destinationComponent = new DestinationComponent(destination);
-    render(this._containerEventDetails, this._destinationComponent.getElement(), Position.BEFOREEND);
-  }
-
-  _changePointType(type) {
-    this._pointEdit.getElement()
-      .querySelector(`.event__type-output`)
-      .textContent = `${type} ${getPreposition(type)}`;
-
-    this._pointEdit.getElement()
-      .querySelector(`.event__type-icon`)
-      .src = `img/icons/${type.toLowerCase()}.png`;
-  }
-
-  _updateOffersForCurrentType(offers) {
-    unrender(this._offersComponent.getElement());
-    this._offersComponent.removeElement();
-    this._createOffers(offers);
+    // if (this._data.offers.length) {
+    //   this._createOffers(this._data)
+    // }
+    this._pointEdit.getElement().addEventListener(`change`, (evt) => this._onChangeForm(evt));
   }
 
   _initializeCalendars() {
@@ -109,30 +87,68 @@ export default class AbstractPointController {
     };
   }
 
-  _onPointTypeInputChange(evt) {
+  _updateOffersForCurrentType(offers) {
+    unrender(this._offersComponent.getElement());
+    this._offersComponent.removeElement();
+    if (offers.length) {
+      this._createOffers(offers);
+    }
+  }
+
+  _updateDestinationForCurrentCity(destination) {
+    unrender(this._destinationComponent.getElement());
+    this._destinationComponent.removeElement();
+    if (destination) {
+      this._createDestination(destination);
+    }
+  }
+
+  _createOffers(data) {
+    this._offersComponent = new OffersComponent(data);
+    render(this._containerEventDetails, this._offersComponent.getElement(), Position.AFTERBEGIN);
+  }
+
+  _createDestination(destination) {
+    this._destinationComponent = new DestinationComponent(destination);
+    render(this._containerEventDetails, this._destinationComponent.getElement(), Position.BEFOREEND);
+  }
+
+  _changePointType(type) {
+    this._pointEdit.getElement()
+      .querySelector(`.event__type-output`)
+      .textContent = `${type} ${getPreposition(type)}`;
+
+    this._pointEdit.getElement()
+      .querySelector(`.event__type-icon`)
+      .src = `img/icons/${type.toLowerCase()}.png`;
+  }
+
+  _onChangeForm(evt) {
     if (evt.target.tagName !== `INPUT`) {
       return;
     }
 
-    this._pointEdit.getElement()
-      .querySelector(`.event__type-toggle`)
-      .checked = false;
+    switch (evt.target.name) {
+      case Input.TYPE:
+        this._pointEdit.getElement()
+          .querySelector(`.event__type-toggle`)
+          .checked = false;
+        const currentType = evt.target.value;
+        this._changePointType(currentType);
+        const offersForCurrentType = AbstractPointController.offers.find((offer) => offer.type === currentType.toLowerCase()).offers;
+        this._updateOffersForCurrentType(offersForCurrentType);
+        break;
 
+      case Input.DESTINATION:
+        const destinationInfoForCurrentCity = AbstractPointController.destinations.find((destination) => destination.name === evt.target.value);
+        this._updateDestinationForCurrentCity(destinationInfoForCurrentCity);
+        break;
+    }
 
-    const currentType = evt.target.value;
-    this._changePointType(currentType);
-
-    const offersForCurrentType = AbstractPointController.offers.find((offer) => offer.type === currentType.toLowerCase()).offers;
-    this._updateOffersForCurrentType(offersForCurrentType);
-
-  }
-
-  _onPointDestinationInputChange(evt) {
-    const destinationInfoForCurrentCity = AbstractPointController.destinations.find((destination) => destination.name === evt.target.value);
-    unrender(this._destinationComponent.getElement());
-    this._destinationComponent.removeElement();
-    if (destinationInfoForCurrentCity) {
-      this._createDestination(destinationInfoForCurrentCity);
+    if (this._containerEventDetails.hasChildNodes()) {
+      this._containerEventDetails.classList.remove(`visually-hidden`);
+    } else {
+      this._containerEventDetails.classList.add(`visually-hidden`);
     }
   }
 
@@ -144,3 +160,6 @@ export default class AbstractPointController {
     AbstractPointController.offers = offers;
   }
 }
+
+export {AbstractPointController as default};
+

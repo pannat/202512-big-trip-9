@@ -1,7 +1,7 @@
 import AbstractComponent from "./abstract-component";
 import moment from "moment";
 
-export default class extends AbstractComponent {
+class Day extends AbstractComponent {
   constructor(pointsNumber, date, dayNumber) {
     super();
     this._date = date;
@@ -22,3 +22,5 @@ export default class extends AbstractComponent {
             </li>`;
   }
 }
+
+export {Day as default};

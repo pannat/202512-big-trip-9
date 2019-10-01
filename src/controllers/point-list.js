@@ -1,11 +1,17 @@
+import {Position, render, getUniqueList} from "../utils";
 import moment from "moment";
 import Day from "../components/day";
 import PointController from "./point";
 import NewPointController from "./new-point";
-import {Position, render, getUniqueList} from "../utils";
+import ModelPoint from "../model-point";
 
+const SortType = {
+  EVENT: `event`,
+  PRICE: `price`,
+  TIME: `time`
+};
 
-export default class {
+class PointListController {
   constructor(container, points, onDataChange) {
     this._container = container;
     this._points = points;
@@ -30,20 +36,22 @@ export default class {
       return;
     }
 
-    const defaultPoint = {
-      type: ``,
-      city: ``,
-      dates: {
-        start: Date.parse(moment()),
-        end: Date.parse(moment().add(1, `hours`)),
+    const localPoint = {
+      [`id`]: String(this._points.length),
+      [`base_price`]: 0,
+      [`date_from`]: moment().format(),
+      [`date_to`]: moment().add(1, `hour`).format(),
+      [`destination`]: {
+        name: ``,
+        pictures: [],
+        description: ``
       },
-      pictures: [],
-      price: +0,
-      description: ``,
-      offers: []
+      [`is_favorite`]: false,
+      [`offers`]: [],
+      [`type`]: ``
     };
 
-    this._newPointController = new NewPointController(container, defaultPoint, this._onDataChange, this._onChangeView, () => {
+    this._newPointController = new NewPointController(container, new ModelPoint(localPoint), this._onDataChange, this._onChangeView, () => {
       this._newPointController = null;
     });
 
@@ -59,15 +67,15 @@ export default class {
     }
 
     switch (element.dataset.sortType) {
-      case `event`:
+      case SortType.EVENT:
         this._getUniqueDays();
         this._getPointsDays();
         this._uniqueDays.forEach((data, count) => this._createDay(this._pointsDays[count], data, count));
         break;
-      case `price`:
+      case SortType.PRICE:
         this._createDay(this._points.slice(0).sort((a, b) => b.price - a.price));
         break;
-      case `time`:
+      case SortType.TIME:
         this._createDay(this._points.sort((a, b) => b.duration - a.duration));
         break;
     }
@@ -92,7 +100,7 @@ export default class {
   _createDay(points, date, dayNumber) {
     const day = new Day(points.length, date, dayNumber);
     const pointsContainers = day.getElement().querySelectorAll(`.trip-events__item`);
-    points.forEach((point, index) => this._createPoint(pointsContainers[index], point, ));
+    points.forEach((point, index) => this._createPoint(pointsContainers[index], point));
     render(this._container, day.getElement(), Position.BEFOREEND);
   }
 
@@ -101,3 +109,5 @@ export default class {
     this._subscriptions.push(pointController.setDefaultView.bind(pointController));
   }
 }
+
+export {PointListController as default};

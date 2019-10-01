@@ -1,7 +1,7 @@
 import moment from "moment";
 import AbstractPoint from "./abstract-point";
 
-export default class extends AbstractPoint {
+class PointEdit extends AbstractPoint {
   constructor({type, city, dates, price, offers, description, pictures, isFavorite}, destinationCities) {
     super({type, city, dates, price, offers, description, pictures, isFavorite}, destinationCities);
   }
@@ -66,7 +66,9 @@ export default class extends AbstractPoint {
                   <span class="visually-hidden">Open event</span>
                 </button>
               </header>
-              <section class="event__details">
+              <section class="event__details"></section>
             </form>`;
   }
 }
+
+export {PointEdit as default};

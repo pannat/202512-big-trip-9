@@ -1,6 +1,6 @@
 import AbstractComponent from "./abstract-component";
 
-export default class extends AbstractComponent {
+class TripInfo extends AbstractComponent {
   constructor() {
     super();
   }
@@ -12,3 +12,5 @@ export default class extends AbstractComponent {
       </div>`;
   }
 }
+
+export {TripInfo as default};

@@ -32,6 +32,15 @@ export default class API {
     });
   }
 
+  createPoints({data}) {
+    return this._load({
+      url: `points`,
+      method: Method.POST,
+      body: JSON.stringify(data),
+      headers: new Headers({'Content-Type': `application/json`})
+    });
+  }
+
 
   getDestinations() {
     return this._load({url: `destinations`})

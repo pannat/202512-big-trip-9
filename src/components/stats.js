@@ -1,6 +1,6 @@
 import AbstractComponent from "./abstract-component";
 
-export default class extends AbstractComponent {
+class Stats extends AbstractComponent {
   constructor() {
     super();
   }
@@ -23,3 +23,5 @@ export default class extends AbstractComponent {
         </section>`;
   }
 }
+
+export {Stats as default};

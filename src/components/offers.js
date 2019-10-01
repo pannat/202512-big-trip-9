@@ -1,13 +1,13 @@
 import AbstractComponent from "./abstract-component";
 
-export default class extends AbstractComponent {
+class Offers extends AbstractComponent {
   constructor(offers) {
     super();
     this._offers = offers;
   }
 
   getTemplate() {
-    return `<section class="event__section  event__section--offers ${this._offers.length ? `` : `visually-hidden`}">
+    return `<section class="event__section  event__section--offers">
                   <h3 class="event__section-title  event__section-title--offers">Offers</h3>
                   <div class="event__available-offers">
                   ${this._offers.map((offer) => `<div class="event__offer-selector">
@@ -23,3 +23,7 @@ export default class extends AbstractComponent {
                 </section>`;
   }
 }
+
+export {Offers as default};
+
+

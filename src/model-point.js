@@ -3,10 +3,10 @@ import moment from "moment";
 export default class ModelPoint {
   constructor(data) {
     this.id = data[`id`];
-    this.type = `${data[`type`][0].toUpperCase()}${data[`type`].slice(1)}`;
+    this.type = data.type ? `${data[`type`][0].toUpperCase()}${data[`type`].slice(1)}` : ``;
     this.city = data[`destination`][`name`];
     this.description = data[`destination`][`description`];
-    this.pictures = Array.from(data[`destination`][`pictures`]);
+    this.pictures = data[`destination`][`pictures`];
     this.dates = {
       start: new Date(data[`date_from`]),
       end: new Date(data[`date_to`])

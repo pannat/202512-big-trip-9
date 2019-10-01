@@ -1,7 +1,7 @@
 import AbstractComponent from "./abstract-component";
 import {groupToType, getPreposition} from "../utils";
 
-export default class AbstractPoint extends AbstractComponent {
+class AbstractPoint extends AbstractComponent {
   constructor({type, city, dates, price, offers, description, pictures, isFavorite}, destinationCities = []) {
     super();
     this._choosenType = type ? type : ``;
@@ -26,3 +26,5 @@ export default class AbstractPoint extends AbstractComponent {
     }
   }
 }
+
+export {AbstractPoint as default};

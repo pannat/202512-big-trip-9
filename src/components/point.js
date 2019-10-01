@@ -2,7 +2,7 @@ import {formatDuration} from "../utils";
 import moment from 'moment';
 import AbstractPoint from "./abstract-point";
 
-export default class extends AbstractPoint {
+class Point extends AbstractPoint {
   constructor({type, city, dates, price, offers, duration}) {
     super({type, city, dates, price, offers});
     this._duration = formatDuration(duration);
@@ -26,7 +26,7 @@ export default class extends AbstractPoint {
               </p>
               <h4 class="visually-hidden">Offers:</h4>
               <ul class="event__selected-offers">
-                  ${this._offers.filter((offer) => offer.accepted).map((offer) => `<li class="event__offer">
+                  ${this._offers.filter((offer) => offer.accepted).slice(0, 3).map((offer) => `<li class="event__offer">
                     <span class="event__offer-title">${offer.title}</span>
                     +
                     &euro;
@@ -39,3 +39,5 @@ export default class extends AbstractPoint {
             </div>`;
   }
 }
+
+export {Point as default};

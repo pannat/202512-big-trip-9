@@ -1,6 +1,6 @@
 import AbstractComponent from "./abstract-component";
 
-export default class extends AbstractComponent {
+class Filter extends AbstractComponent {
   constructor() {
     super();
   }
@@ -26,3 +26,5 @@ export default class extends AbstractComponent {
             </form>`;
   }
 }
+
+export {Filter as default};

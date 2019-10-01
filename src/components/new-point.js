@@ -1,7 +1,7 @@
 import moment from "moment";
 import AbstractPoint from "./abstract-point";
 
-export default class extends AbstractPoint {
+class NewPoint extends AbstractPoint {
   constructor({type, city, dates, price, description, pictures}, destinationCities) {
     super({type, city, dates, price, description, pictures}, destinationCities);
   }
@@ -63,3 +63,5 @@ export default class extends AbstractPoint {
           </form>`;
   }
 }
+
+export {NewPoint as default};

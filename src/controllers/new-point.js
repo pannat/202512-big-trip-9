@@ -1,8 +1,8 @@
 import {Key, Position, render, unrender} from "../utils";
 import AbstractPointController from "./abstract-point";
-import PointAdd from "../components/point-add";
+import PointAdd from "../components/new-point";
 
-export default class extends AbstractPointController {
+class NewPointController extends AbstractPointController {
   constructor(container, data, onDataChange, onChangeView, removeNewPoint) {
     super(container, data, onDataChange, onChangeView, PointAdd);
     this._removeNewPoint = removeNewPoint;
@@ -10,54 +10,43 @@ export default class extends AbstractPointController {
     this._create();
   }
 
+  setDefaultView() {
+    if (this._container.contains(this._pointEdit.getElement())) {
+      this._closeNewPoint();
+    }
+  }
+
   _create() {
-    const closeNewPoint = () => {
-      unrender(this._pointEdit.getElement());
-      this._pointEdit.removeElement();
-      this._removeNewPoint();
-    };
-
-    const onEscKeyDown = (evt) => {
-      if (evt.key === Key.ESCAPE || evt.key === Key.ESCAPE_IE) {
-        closeNewPoint();
-      }
-      document.removeEventListener(`keydown`, onEscKeyDown);
-    };
-
     this._onChangeView();
     this._initializeCalendars();
 
     this._pointEdit.getElement().querySelector(`.event__reset-btn`).
     addEventListener(`click`, (evt) => {
       evt.preventDefault();
-      closeNewPoint();
+      this._closeNewPoint();
     });
 
     this._pointEdit.getElement().querySelector(`.event__save-btn`)
       .addEventListener(`click`, (evt) => {
         evt.preventDefault();
-        this._onDataChange(`create`, this._createNewData());
+        this._onDataChange(`create`, Object.assign(this._data, this._createNewData()));
       });
-
-    this._listPointType.addEventListener(`change`, () => this._checkAvailableContainer());
-    this._fieldDestination.addEventListener(`change`, () => this._checkAvailableContainer());
-
-    document.addEventListener(`keydown`, onEscKeyDown);
-
+    document.addEventListener(`keydown`, (evt) => this._onEscKeyDown(evt));
     render(this._container, this._pointEdit.getElement(), Position.AFTERBEGIN);
   }
 
-  _checkAvailableContainer() {
-    if (this._containerEventDetails.classList.contains(`visually-hidden`)) {
-      this._containerEventDetails.classList.remove(`visually-hidden`);
+  _onEscKeyDown(evt) {
+    if (evt.key === Key.ESCAPE || evt.key === Key.ESCAPE_IE) {
+      this._closeNewPoint();
     }
   }
 
-  setDefaultView() {
-    if (this._container.contains(this._pointEdit.getElement())) {
-      unrender(this._pointEdit.getElement());
-      this._pointEdit.removeElement();
-      this._removeNewPoint();
-    }
+  _closeNewPoint() {
+    unrender(this._pointEdit.getElement());
+    this._pointEdit.removeElement();
+    this._removeNewPoint();
+    document.removeEventListener(`keydown`, this._onEscKeyDown);
   }
 }
+
+export {NewPointController as default};
