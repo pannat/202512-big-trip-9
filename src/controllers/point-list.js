@@ -12,6 +12,7 @@ export default class {
     this._subscriptions = [];
     this._uniqueDays = [];
     this._pointsDays = [];
+    this._newPointController = null;
 
 
     this._onChangeView = this._onChangeView.bind(this);
@@ -24,6 +25,11 @@ export default class {
   }
 
   createNewPoint(container) {
+
+    if (this._newPointController) {
+      return;
+    }
+
     const defaultPoint = {
       type: ``,
       city: ``,
@@ -31,18 +37,26 @@ export default class {
         start: Date.parse(moment()),
         end: Date.parse(moment().add(1, `hours`)),
       },
-      photos: [],
+      pictures: [],
       price: +0,
       description: ``,
-      options: []
+      offers: []
     };
 
-    this._createPoint(container, defaultPoint, NewPointController);
+    this._newPointController = new NewPointController(container, defaultPoint, this._onDataChange, this._onChangeView, () => {
+      this._newPointController = null;
+    });
+
+    this._subscriptions.push(this._newPointController.setDefaultView.bind(this._newPointController));
   }
 
   renderPointList(element, points, container) {
     this._points = points;
     this._container = container;
+
+    if (this._newPointController) {
+      this._newPointController = null;
+    }
 
     switch (element.dataset.sortType) {
       case `event`:
@@ -78,12 +92,12 @@ export default class {
   _createDay(points, date, dayNumber) {
     const day = new Day(points.length, date, dayNumber);
     const pointsContainers = day.getElement().querySelectorAll(`.trip-events__item`);
-    points.forEach((point, index) => this._createPoint(pointsContainers[index], point, PointController));
+    points.forEach((point, index) => this._createPoint(pointsContainers[index], point, ));
     render(this._container, day.getElement(), Position.BEFOREEND);
   }
 
-  _createPoint(container, point, Controller) {
-    const pointController = new Controller(container, point, this._onDataChange, this._onChangeView);
+  _createPoint(container, data) {
+    const pointController = new PointController(container, data, this._onDataChange, this._onChangeView);
     this._subscriptions.push(pointController.setDefaultView.bind(pointController));
   }
 }

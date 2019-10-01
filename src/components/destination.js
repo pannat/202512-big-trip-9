@@ -1,10 +1,10 @@
 import AbstractComponent from "./abstract-component";
 
 export default class extends AbstractComponent {
-  constructor(description, photos) {
+  constructor({description, pictures}) {
     super();
     this._description = description;
-    this._photos = photos;
+    this._photos = pictures;
   }
 
   getTemplate() {

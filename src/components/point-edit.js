@@ -2,8 +2,8 @@ import moment from "moment";
 import AbstractPoint from "./abstract-point";
 
 export default class extends AbstractPoint {
-  constructor({type, city, dates, price, options, description, photos, isFavorite}, destinationCities) {
-    super({type, city, dates, price, options, description, photos, isFavorite}, destinationCities);
+  constructor({type, city, dates, price, offers, description, pictures, isFavorite}, destinationCities) {
+    super({type, city, dates, price, offers, description, pictures, isFavorite}, destinationCities);
   }
 
   getTemplate() {
@@ -67,8 +67,6 @@ export default class extends AbstractPoint {
                 </button>
               </header>
               <section class="event__details">
-             
-              </section>
             </form>`;
   }
 }

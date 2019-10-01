@@ -1,5 +1,4 @@
 import ModelPoint from "./model-point";
-import AbstractPointController from "./controllers/abstract-point";
 
 const Method = {
   GET: `GET`,
@@ -20,16 +19,28 @@ export default class API {
       .then(ModelPoint.parsePoints);
   }
 
+  deletePoints({id}) {
+    return this._load({url: `points/${id}`, method: Method.DELETE});
+  }
+
+  updatePoints({id, data}) {
+    return this._load({
+      url: `points/${id}`,
+      method: Method.PUT,
+      body: JSON.stringify(data),
+      headers: new Headers({'Content-Type': `application/json`})
+    });
+  }
+
+
   getDestinations() {
     return this._load({url: `destinations`})
-      .then(API.toJSON)
-      .then(AbstractPointController.setDestinations);
+      .then(API.toJSON);
   }
 
   getOffers() {
     return this._load({url: `offers`})
-      .then(API.toJSON)
-      .then(AbstractPointController.setOffers);
+      .then(API.toJSON);
   }
 
   _load({url, method = Method.GET, body = null, headers = new Headers()}) {

@@ -1,23 +1,39 @@
 import moment from "moment";
 
-export const Position = {
+const Position = {
   AFTERBEGIN: `afterbegin`,
   BEFOREEND: `beforeend`
 };
 
-export const Key = {
+const Key = {
   ESCAPE_IE: `Escape`,
   ESCAPE: `Esc`,
 };
 
-export const groupToType = {
+const groupToType = {
   transfer: [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`],
   activity: [`Check-in`, `Sightseeing`, `Restaurant`]
 };
 
-export const getUniqueList = (list) => Array.from(new Set(list));
+const groupToPreposition = {
+  transfer: `to`,
+  activity: `in`
+};
 
-export const formatDuration = (duration) => {
+const getPreposition = (type) => {
+  let preposition = ``;
+  for (let group in groupToType) {
+    if (groupToType[group].includes(type)) {
+      preposition = groupToPreposition[group];
+      break;
+    }
+  }
+  return preposition;
+};
+
+const getUniqueList = (list) => Array.from(new Set(list));
+
+const formatDuration = (duration) => {
   const setFormatUnitTime = (unit) => {
     return unit > 9 ? unit : `0${unit}`;
   };
@@ -33,13 +49,13 @@ export const formatDuration = (duration) => {
 };
 
 
-export const createElement = (template) => {
+const createElement = (template) => {
   const newElement = document.createElement(`div`);
   newElement.innerHTML = template;
   return newElement.firstChild;
 };
 
-export const render = (container, element, place) => {
+const render = (container, element, place) => {
   switch (place) {
     case Position.AFTERBEGIN:
       container.prepend(element);
@@ -50,9 +66,10 @@ export const render = (container, element, place) => {
   }
 };
 
-export const unrender = (element) => {
+const unrender = (element) => {
   if (element) {
     element.remove();
   }
 };
 
+export {Position, Key, groupToType, getPreposition, getUniqueList, formatDuration, createElement, render, unrender};

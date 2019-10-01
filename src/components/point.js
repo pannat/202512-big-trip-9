@@ -3,8 +3,8 @@ import moment from 'moment';
 import AbstractPoint from "./abstract-point";
 
 export default class extends AbstractPoint {
-  constructor({type, city, dates, price, options, duration}) {
-    super({type, city, dates, price, options});
+  constructor({type, city, dates, price, offers, duration}) {
+    super({type, city, dates, price, offers});
     this._duration = formatDuration(duration);
   }
 
@@ -26,11 +26,11 @@ export default class extends AbstractPoint {
               </p>
               <h4 class="visually-hidden">Offers:</h4>
               <ul class="event__selected-offers">
-                  ${this._options.filter((option) => option.accepted).map((option) => `<li class="event__offer">
-                    <span class="event__offer-title">${option.title}</span>
+                  ${this._offers.filter((offer) => offer.accepted).map((offer) => `<li class="event__offer">
+                    <span class="event__offer-title">${offer.title}</span>
                     +
                     &euro;
-                    <span class="event__offer-price">${option.price}</span>
+                    <span class="event__offer-price">${offer.price}</span>
                 </li>`).join(``)}
               </ul>
               <button class="event__rollup-btn" type="button">

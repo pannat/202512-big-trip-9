@@ -2,8 +2,8 @@ import moment from "moment";
 import AbstractPoint from "./abstract-point";
 
 export default class extends AbstractPoint {
-  constructor({type, city, dates, price, options, description, photos}, destinationCities) {
-    super({type, city, dates, price, options, description, photos}, destinationCities);
+  constructor({type, city, dates, price, description, pictures}, destinationCities) {
+    super({type, city, dates, price, description, pictures}, destinationCities);
   }
 
   getTemplate() {
@@ -59,7 +59,7 @@ export default class extends AbstractPoint {
               <button class="event__reset-btn" type="reset">Cancel</button>
             </header>
             
-            <section class="event__details"></section>
+            <section class="event__details visually-hidden"></section>
           </form>`;
   }
 }
