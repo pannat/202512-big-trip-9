@@ -30,9 +30,6 @@ class AbstractPointController {
   }
 
   _init() {
-    // if (this._data.offers.length) {
-    //   this._createOffers(this._data)
-    // }
     this._pointEdit.getElement().addEventListener(`change`, (evt) => this._onChangeForm(evt));
   }
 

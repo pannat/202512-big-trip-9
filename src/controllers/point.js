@@ -2,6 +2,7 @@ import {Key, Position, render} from "../utils";
 import Point from "../components/point";
 import PointEdit from "../components/point-edit";
 import AbstractPointController from "./abstract-point";
+import {Action} from "../main";
 
 
 class PointController extends AbstractPointController {
@@ -109,7 +110,7 @@ class PointController extends AbstractPointController {
 
   _onSubmit(newData) {
     Object.assign(this._data, newData);
-    this._onDataChange(`update`, this._data);
+    this._onDataChange(Action.UPDATE, this._data);
   }
 }
 

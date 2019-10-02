@@ -1,6 +1,7 @@
 import {Key, Position, render, unrender} from "../utils";
 import AbstractPointController from "./abstract-point";
 import PointAdd from "../components/new-point";
+import {Action} from "../main";
 
 class NewPointController extends AbstractPointController {
   constructor(container, data, onDataChange, onChangeView, removeNewPoint) {
@@ -29,7 +30,8 @@ class NewPointController extends AbstractPointController {
     this._pointEdit.getElement().querySelector(`.event__save-btn`)
       .addEventListener(`click`, (evt) => {
         evt.preventDefault();
-        this._onDataChange(`create`, Object.assign(this._data, this._createNewData()));
+        Object.assign(this._data, this._createNewData());
+        this._onDataChange(Action.CREATE, this._data);
       });
     document.addEventListener(`keydown`, (evt) => this._onEscKeyDown(evt));
     render(this._container, this._pointEdit.getElement(), Position.AFTERBEGIN);

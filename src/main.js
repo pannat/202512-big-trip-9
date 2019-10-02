@@ -107,6 +107,4 @@ siteButtonNewPointElement.addEventListener(`click`, () => {
   menu.setActiveButtonTable();
 });
 
-// console.log(AUTHORIZATION);
-
 export {Action};
