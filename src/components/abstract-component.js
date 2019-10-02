@@ -1,6 +1,6 @@
 import {createElement} from "../utils";
 
-export default class AbstractComponent {
+class AbstractComponent {
   constructor() {
     this._element = null;
     if (new.target === AbstractComponent) {
@@ -24,4 +24,7 @@ export default class AbstractComponent {
     throw new Error(`Abstract method not implemented: getTemplate`);
   }
 }
+
+export {AbstractComponent as default};
+
 

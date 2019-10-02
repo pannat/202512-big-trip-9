@@ -1,19 +1,26 @@
+import Stats from "../components/stats";
 import Chart from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
-import {pointTypes as pointTypesMap} from "../components/point-edit";
-import {formatDuration, getUniqueList} from "../utils";
+import {formatDuration, getUniqueList, groupToType, Position, render} from "../utils";
 
-export default class {
-  constructor(points) {
-    this._moneyCtx = document.querySelector(`.statistics__chart--money`);
-    this._transportCtx = document.querySelector(`.statistics__chart--transport`);
-    this._timeCtx = document.querySelector(`.statistics__chart--time`);
+class StatsController {
+  constructor(container) {
+    this._container = container;
+    this._stats = new Stats();
+    this._moneyCtx = this._stats.getElement().querySelector(`.statistics__chart--money`);
+    this._transportCtx = this._stats.getElement().querySelector(`.statistics__chart--transport`);
+    this._timeCtx = this._stats.getElement().querySelector(`.statistics__chart--time`);
+
     this._pointsTypes = [];
     this._uniquePointTypes = [];
     this._pointTypesTransfer = [];
     this._uniquePointTypesTransfer = [];
     this._countTransportTrips = {};
 
+    this._create();
+  }
+
+  init(points) {
     this._structureData(points);
 
     this._moneyChart = new Chart(this._moneyCtx, {
@@ -70,7 +77,8 @@ export default class {
             },
             labels: this._uniquePointTypes.map((type) => type.toUpperCase()),
             barThickness: `flex`,
-            minBarLength: 35
+            minBarLength: 35,
+            maxBarThickness: 40
           }]
         },
         legend: {
@@ -136,7 +144,8 @@ export default class {
             },
             labels: this._uniquePointTypesTransfer.map((type) => type.toUpperCase()),
             barPercentage: 0.8,
-            minBarLength: 55
+            minBarLength: 55,
+            maxBarThickness: 40
           }]
         },
         legend: {
@@ -189,6 +198,7 @@ export default class {
               beginAtZero: true,
               display: false
             },
+            minBarLength: 70
           }],
           yAxes: [{
             position: `left`,
@@ -201,8 +211,7 @@ export default class {
               fontColor: `#000000`,
             },
             labels: this._uniquePointTypes.map((type) => type.toUpperCase()),
-            barPercentage: 0.8,
-            minBarLength: 55
+            maxBarThickness: 40
           }]
         },
         legend: {
@@ -230,10 +239,22 @@ export default class {
     this._timeChart.update();
   }
 
+  hide() {
+    this._stats.getElement().classList.add(`visually-hidden`);
+  }
+
+  show() {
+    this._stats.getElement().classList.remove(`visually-hidden`);
+  }
+
+  _create() {
+    render(this._container, this._stats.getElement(), Position.BEFOREEND);
+  }
+
   _structureData(data) {
     this._pointsTypes = data.map((point) => point.type);
     this._uniquePointTypes = getUniqueList(this._pointsTypes);
-    this._pointTypesTransfer = this._pointsTypes.filter((type) => pointTypesMap.transfer.includes(type));
+    this._pointTypesTransfer = this._pointsTypes.filter((type) => groupToType.transfer.includes(type));
     this._uniquePointTypesTransfer = getUniqueList(this._pointTypesTransfer);
     this._countTransportTrips = this._pointTypesTransfer.reduce((acc, it) => {
       acc[it] = (acc[it] || 0) + 1;
@@ -248,4 +269,5 @@ export default class {
   }
 }
 
+export {StatsController as default};
 

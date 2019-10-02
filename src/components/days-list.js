@@ -1,6 +1,6 @@
 import AbstractComponent from "./abstract-component";
 
-export default class extends AbstractComponent {
+class DaysList extends AbstractComponent {
   constructor() {
     super();
   }
@@ -9,4 +9,6 @@ export default class extends AbstractComponent {
     return `<ul class="trip-days"></ul>`;
   }
 }
+
+export {DaysList as default};
 

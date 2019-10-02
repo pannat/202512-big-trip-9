@@ -1,20 +1,30 @@
 import AbstractComponent from "./abstract-component";
 
-export default class extends AbstractComponent {
-  constructor(filters) {
+class Filter extends AbstractComponent {
+  constructor() {
     super();
-    this._items = filters;
   }
 
   getTemplate() {
     return `<form class="trip-filters" action="#" method="get">
-              ${this._items.map((item) => `<div class="trip-filters__filter">
-                <input id="filter-${item.title.toLowerCase()}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${item.title.toLowerCase()}"
-                ${item.isActive ? `checked` : ``}>
-                <label class="trip-filters__filter-label" for="filter-${item.title.toLowerCase()}">${item.title}</label>
-              </div>`).join(``)}
+              <div class="trip-filters__filter">
+                <input data-filter-type="everything" id="filter-everything" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="everything" checked>
+                <label class="trip-filters__filter-label" for="filter-everything">Everything</label>
+              </div>
+
+              <div class="trip-filters__filter">
+                <input data-filter-type="future" id="filter-future" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="future">
+                <label class="trip-filters__filter-label" for="filter-future">Future</label>
+              </div>
+
+              <div class="trip-filters__filter">
+                <input data-filter-type="past" id="filter-past" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="past">
+                <label class="trip-filters__filter-label" for="filter-past">Past</label>
+              </div>
 
               <button class="visually-hidden" type="submit">Accept filter</button>
-          </form>`;
+            </form>`;
   }
 }
+
+export {Filter as default};
