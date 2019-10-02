@@ -25,6 +25,19 @@ class Filter extends AbstractComponent {
               <button class="visually-hidden" type="submit">Accept filter</button>
             </form>`;
   }
+
+  get checkedItem() {
+    this._checkedItem = this.element.querySelector(`.trip-filters__filter-input:checked`);
+    return this._checkedFilter;
+  }
+
+  show() {
+    this.element.classList.remove(`visually-hidden`);
+  }
+
+  hide() {
+    this.element.classList.add(`visually-hidden`);
+  }
 }
 
 export {Filter as default};

@@ -33,6 +33,22 @@ class Sort extends AbstractComponent {
             <span class="trip-sort__item  trip-sort__item--offers">Offers</span>
           </form>`;
   }
+
+  get checkedItem() {
+    this._checkedItem = this.element.querySelector(`.trip-sort__input:checked`);
+    return this._checkedItem;
+  }
+
+
+  checkAvailable() {
+    if (this.element.classList.contains(`visually-hidden`)) {
+      this.element.classList.remove(`visually-hidden`);
+    }
+  }
+
+  hide() {
+    this.element.classList.add(`visually-hidden`);
+  }
 }
 
 export {Sort as default};

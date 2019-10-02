@@ -13,17 +13,14 @@ class TripController {
     this._pointsSortedByEndDate = [];
     this._sortComponent = new Sort();
     this._daysListComponent = new DaysList();
-    this._tripInfoComponent = new TripInfo();
+    this._tripInfoComponent = new TripInfo(this._calculateTripInfoTitle.bind(this), this._calculateTripInfoDates.bind(this));
     this._filterComponent = new Filter();
     this._messageNoPointsComponent = new MessageNoPoints();
-
     this._pointListController = null;
 
     this._tripTotalCostElement = tripTotalCostElement;
     this._tripInfoContainerElement = tripInfoContainerElement;
     this._filterContainerElement = filterContainerElement;
-    this._tripInfoTitleElement = this._tripInfoComponent.element.querySelector(`.trip-info__title`);
-    this._tripInfoDatesElement = this._tripInfoComponent.element.querySelector(`.trip-info__dates`);
 
     this._onDataChange = onDataChange;
   }
@@ -35,18 +32,17 @@ class TripController {
     if (this._points.length) {
       this._removeMessageNoPoints();
       this._pointsSortedByEndDate = this._points.slice().sort((a, b) => b.dates.end - a.dates.end);
-
       this._tripTotalCostElement.textContent = this._calculateTotalCost();
-      this._tripInfoTitleElement.textContent = this._getTripInfoTitle();
-      this._tripInfoDatesElement.textContent = this._getTripInfoDates();
+      this._tripInfoComponent.update();
+
       render(this._container, this._sortComponent.element, Position.BEFOREEND);
       render(this._tripInfoContainerElement, this._tripInfoComponent.element, Position.AFTERBEGIN);
       render(this._filterContainerElement, this._filterComponent.element, Position.BEFOREEND);
 
+
       this._filterComponent.element.addEventListener(`click`, (evt) => {
         this._appliesFilterToList(evt.target);
       });
-
       this._sortComponent.element
         .addEventListener(`click`, (evt) => this._onSortInputClick(evt));
     } else {
@@ -63,19 +59,15 @@ class TripController {
 
     if (points.length) {
       this._points = points.slice().sort((a, b) => a.dates.start - b.dates.start);
-
-      if (this._sortComponent.element.classList.contains(`visually-hidden`)) {
-        this._sortComponent.element.classList.remove(`visually-hidden`);
-      }
-
       this._pointsSortedByEndDate = this._points.slice().sort((a, b) => b.dates.end - a.dates.end);
+
+      this._sortComponent.checkAvailable();
       this._tripTotalCostElement.textContent = this._calculateTotalCost();
-      this._tripInfoTitleElement.textContent = this._getTripInfoTitle();
-      this._tripInfoDatesElement.textContent = this._getTripInfoDates();
-      this._appliesFilterToList(this._filterComponent.element.querySelector(`.trip-filters__filter-input:checked`));
+      this._tripInfoComponent.update();
+      this._appliesFilterToList(this._filterComponent.checkedItem);
     } else {
-      this._filterComponent.element.classList.add(`visually-hidden`);
-      this._sortComponent.element.classList.add(`visually-hidden`);
+      this._filterComponent.hide();
+      this._sortComponent.hide();
       this._setDefaultTripInfo();
       render(this._daysListComponent.element, this._messageNoPointsComponent.element, Position.BEFOREEND);
     }
@@ -85,12 +77,12 @@ class TripController {
 
   show() {
     this._container.classList.remove(`trip-events--hidden`);
-    this._filterComponent.element.classList.remove(`visually-hidden`);
+    this._filterComponent.show();
   }
 
   hide() {
     this._container.classList.add(`trip-events--hidden`);
-    this._filterComponent.element.classList.add(`visually-hidden`);
+    this._filterComponent.hide();
   }
 
   createNewPoint() {
@@ -103,15 +95,15 @@ class TripController {
 
     switch (element.dataset.filterType) {
       case `everything`:
-        this._pointListController.renderPointList(this._sortComponent.element.querySelector(`.trip-sort__input:checked`), this._points, this._daysListComponent.element);
+        this._pointListController.renderPointList(this._sortComponent.checkedItem, this._points, this._daysListComponent.element);
         break;
       case `future`:
         const filteredPointsByFuture = this._points.filter(({dates}) => dates.start > moment());
-        this._pointListController.renderPointList(this._sortComponent.element.querySelector(`.trip-sort__input:checked`), filteredPointsByFuture, this._daysListComponent.element);
+        this._pointListController.renderPointList(this._sortComponent.checkedItem, filteredPointsByFuture, this._daysListComponent.element);
         break;
       case `past`:
         const filteredPointsByPast = this._points.filter(({dates}) => dates.start < moment());
-        this._pointListController.renderPointList(this._sortComponent.element.querySelector(`.trip-sort__input:checked`), filteredPointsByPast, this._daysListComponent.element);
+        this._pointListController.renderPointList(this._sortComponent.checkedItem, filteredPointsByPast, this._daysListComponent.element);
         break;
     }
 
@@ -122,13 +114,13 @@ class TripController {
     return getUniqueList(this._points.map((point) => point.city));
   }
 
-  _getTripInfoTitle() {
+  _calculateTripInfoTitle() {
     const uniqueCities = this._getUniqueCities();
     return uniqueCities.length === 3 ? `${uniqueCities.map((city) => city).join(` — `)}`
       : `${this._points[0].city} — ... — ${this._pointsSortedByEndDate[0].city}`;
   }
 
-  _getTripInfoDates() {
+  _calculateTripInfoDates() {
     return `${moment(this._points[0].dates.start).format(`MMM DD`)} — ${moment(this._pointsSortedByEndDate[0].dates.end).format(`DD MMM`)}`;
   }
 
@@ -145,8 +137,7 @@ class TripController {
 
   _setDefaultTripInfo() {
     this._tripTotalCostElement.textContent = 0;
-    this._tripInfoTitleElement.textContent = ``;
-    this._tripInfoDatesElement.textContent = ``;
+    this._tripInfoComponent.reset();
   }
 
   _removeMessageNoPoints() {
@@ -157,12 +148,11 @@ class TripController {
   }
 
   _onSortInputClick(evt) {
-
     if (evt.target.tagName !== `INPUT`) {
       return;
     }
 
-    this._appliesFilterToList(this._filterComponent.element.querySelector(`.trip-filters__filter-input:checked`));
+    this._appliesFilterToList(this._filterComponent.checkedItem);
   }
 }
 
