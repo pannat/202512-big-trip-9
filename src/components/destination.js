@@ -1,4 +1,5 @@
 import AbstractComponent from "./abstract-component";
+import {InputName} from "../utils";
 
 class Destination extends AbstractComponent {
   constructor({description, pictures}) {
@@ -18,6 +19,18 @@ class Destination extends AbstractComponent {
                     </div>
                   </div>
                 </section>`;
+  }
+
+  get DescriptionOfSelectedDestination() {
+    return this.getElement().querySelector(InputName.DESCRIPTION).textContent;
+  }
+
+  get PicturesOfSelectedDestination() {
+    return Array.from(this.getElement().querySelectorAll(`.event__photo`)).map((photo) => (
+      {
+        src: photo.src,
+        description: photo.alt
+      }));
   }
 }
 

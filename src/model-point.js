@@ -28,7 +28,7 @@ export default class ModelPoint {
   toRAW() {
     return {
       [`id`]: this.id,
-      [`type`]: this.type.toLowerCase(),
+      [`type`]: this.type ? this.type.toLowerCase() : ``,
       [`destination`]: {
         [`name`]: this.city,
         [`description`]: this.description,

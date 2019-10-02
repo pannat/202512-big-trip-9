@@ -7,7 +7,7 @@ const Method = {
   DELETE: `DELETE`
 };
 
-export default class API {
+class API {
   constructor(endPoint, authorization) {
     this._endPoint = endPoint;
     this._authorization = authorization;
@@ -58,8 +58,17 @@ export default class API {
     return fetch(`${this._endPoint}/${url}`, {method, body, headers})
       .then(API.checkStatus)
       .catch((err) => {
+        API.onError(err);
         throw err;
       });
+  }
+
+  static onError(error) {
+    const node = document.createElement(`div`);
+    node.style = `width: 180px; margin: 0 auto; text-align: center; background-color: red;`;
+
+    node.textContent = error;
+    document.body.insertAdjacentElement(`afterbegin`, node);
   }
 
   static checkStatus(response) {
@@ -74,3 +83,5 @@ export default class API {
     return response.json();
   }
 }
+
+export {API as default};

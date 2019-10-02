@@ -4,7 +4,8 @@ import AbstractPoint from "./abstract-point";
 
 class Point extends AbstractPoint {
   constructor({type, city, dates, price, offers, duration}) {
-    super({type, city, dates, price, offers});
+    super({type, city, dates, price});
+    this._offers = offers;
     this._duration = formatDuration(duration);
   }
 

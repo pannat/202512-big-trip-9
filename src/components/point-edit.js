@@ -1,9 +1,10 @@
 import moment from "moment";
 import AbstractPoint from "./abstract-point";
+import {getPreposition} from "../utils";
 
 class PointEdit extends AbstractPoint {
-  constructor({type, city, dates, price, offers, description, pictures, isFavorite}, destinationCities) {
-    super({type, city, dates, price, offers, description, pictures, isFavorite}, destinationCities);
+  constructor({type, city, dates, price, isFavorite}, destinationCities) {
+    super({type, city, dates, price, isFavorite}, destinationCities);
   }
 
   getTemplate() {
@@ -68,6 +69,38 @@ class PointEdit extends AbstractPoint {
               </header>
               <section class="event__details"></section>
             </form>`;
+  }
+
+  revertDestination(callback) {
+    const destinationInput = this._element.querySelector(`.event__input--destination`);
+    if (destinationInput.value !== this._city) {
+      destinationInput.value = this._city;
+      callback(this._city);
+    }
+  }
+
+  revertType(callback) {
+    const checkedTypeInput = this._element.querySelector(`.event__type-input:checked`);
+    if (checkedTypeInput.value !== this._choosenType) {
+      this.setSelectedType(this._choosenType);
+      checkedTypeInput.checked = false;
+      this._element.querySelector(`#event-type-${this._choosenType}-1`).checked = true;
+      callback(this._choosenType);
+    }
+  }
+
+  revertPrice() {
+    const priceInput = this._element.querySelector(`.event__input--price`);
+    if (Number(priceInput.value) !== this._price) {
+      priceInput.value = this._price;
+    }
+  }
+
+  revertFavorite() {
+    const isFavoriteInput = this._element.querySelector(`.event__favorite-checkbox`);
+    if (isFavoriteInput.checked !== this._isFavorite) {
+      isFavoriteInput.checked = this._isFavorite;
+    }
   }
 }
 

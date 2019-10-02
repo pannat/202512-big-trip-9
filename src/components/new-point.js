@@ -2,8 +2,8 @@ import moment from "moment";
 import AbstractPoint from "./abstract-point";
 
 class NewPoint extends AbstractPoint {
-  constructor({type, city, dates, price, description, pictures}, destinationCities) {
-    super({type, city, dates, price, description, pictures}, destinationCities);
+  constructor({type, city, dates, price}, destinationCities) {
+    super({type, city, dates, price}, destinationCities);
   }
 
   getTemplate() {

@@ -22,6 +22,17 @@ class Offers extends AbstractComponent {
                   </div>
                 </section>`;
   }
+
+  get OffersOfSelectedType() {
+    const priceElementsOfOffers = this.getElement().querySelectorAll(`.event__offer-price`);
+    return Array.from(this.getElement().querySelectorAll(`.event__offer-checkbox`)).map((input, index) => ({
+      title: input.name.slice(12),
+      price: Number(priceElementsOfOffers[index].textContent),
+      accepted: Boolean(input.checked)
+    }));
+  }
+
+
 }
 
 export {Offers as default};

@@ -20,6 +20,16 @@ const groupToPreposition = {
   activity: `in`
 };
 
+const InputName = {
+  TYPE: `event-type`,
+  DESTINATION: `event-destination`,
+  START_TIME: `event-start-time`,
+  END_TIME: `event-end-time`,
+  PRICE: `event-price`,
+  DESCRIPTION: `.event__destination-description`,
+  FAVORITE: `event-favorite`
+};
+
 const getPreposition = (type) => {
   let preposition = ``;
   for (let group in groupToType) {
@@ -72,4 +82,4 @@ const unrender = (element) => {
   }
 };
 
-export {Position, Key, groupToType, getPreposition, getUniqueList, formatDuration, createElement, render, unrender};
+export {Position, Key, groupToType, InputName, getPreposition, getUniqueList, formatDuration, createElement, render, unrender};

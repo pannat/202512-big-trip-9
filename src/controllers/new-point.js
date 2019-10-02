@@ -19,7 +19,7 @@ class NewPointController extends AbstractPointController {
 
   _create() {
     this._onChangeView();
-    this._initializeCalendars();
+    this._pointEdit.initializeCalendars();
 
     this._pointEdit.getElement().querySelector(`.event__reset-btn`).
     addEventListener(`click`, (evt) => {

@@ -5,7 +5,7 @@ import TripController from "./controllers/trip";
 import API from "./api";
 import AbstractPointController from "./controllers/abstract-point";
 
-const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAo=0.22904022242917632}`;
+const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAo=0.09326721716349451`;
 const END_POINT = `https://htmlacademy-es-9.appspot.com/big-trip`;
 const MenuItem = {
   TABLE: `table`,
@@ -108,3 +108,4 @@ siteButtonNewPointElement.addEventListener(`click`, () => {
 });
 
 export {Action};
+
