@@ -15,8 +15,8 @@ class PointController extends AbstractPointController {
   }
 
   setDefaultView() {
-    if (this._container.contains(this._pointEdit.getElement())) {
-      this._container.replaceChild(this._pointView.getElement(), this._pointEdit.getElement());
+    if (this._container.contains(this._pointEdit.element)) {
+      this._container.replaceChild(this._pointView.element, this._pointEdit.element);
     }
   }
 
@@ -59,30 +59,30 @@ class PointController extends AbstractPointController {
     };
 
     if (this._data.offers.length) {
-      render(this._pointEdit.ContainerEventDetails, this._offersComponent.getElement(), Position.AFTERBEGIN);
+      render(this._pointEdit.ContainerEventDetails, this._offersComponent.element, Position.AFTERBEGIN);
     }
 
-    render(this._pointEdit.ContainerEventDetails, this._destinationComponent.getElement(), Position.BEFOREEND);
+    render(this._pointEdit.ContainerEventDetails, this._destinationComponent.element, Position.BEFOREEND);
 
-    this._pointView.getElement().
+    this._pointView.element.
     querySelector(`.event__rollup-btn`).
     addEventListener(`click`, () => {
       openCardEdit();
     });
 
-    this._pointEdit.getElement().
+    this._pointEdit.element.
     querySelector(`.event__rollup-btn`).
     addEventListener(`click`, () => {
       closeCardEdit();
     });
 
-    this._pointEdit.getElement().addEventListener(`submit`, onSubmit);
+    this._pointEdit.element.addEventListener(`submit`, onSubmit);
 
-    this._pointEdit.getElement()
+    this._pointEdit.element
       .querySelector(`.event__reset-btn`)
       .addEventListener(`click`, onDeleteButtonClick);
 
-    render(this._container, this._pointView.getElement(), Position.AFTERBEGIN);
+    render(this._container, this._pointView.element, Position.AFTERBEGIN);
   }
 }
 

@@ -21,20 +21,20 @@ class NewPointController extends AbstractPointController {
     this._onChangeView();
     this._pointEdit.initializeCalendars();
 
-    this._pointEdit.getElement().querySelector(`.event__reset-btn`).
+    this._pointEdit.element.querySelector(`.event__reset-btn`).
     addEventListener(`click`, (evt) => {
       evt.preventDefault();
       this._closeNewPoint();
     });
 
-    this._pointEdit.getElement().querySelector(`.event__save-btn`)
+    this._pointEdit.element.querySelector(`.event__save-btn`)
       .addEventListener(`click`, (evt) => {
         evt.preventDefault();
         Object.assign(this._data, this._createNewData());
         this._onDataChange(Action.CREATE, this._data);
       });
     document.addEventListener(`keydown`, (evt) => this._onEscKeyDown(evt));
-    render(this._container, this._pointEdit.getElement(), Position.AFTERBEGIN);
+    render(this._container, this._pointEdit.element, Position.AFTERBEGIN);
   }
 
   _onEscKeyDown(evt) {
@@ -44,7 +44,7 @@ class NewPointController extends AbstractPointController {
   }
 
   _closeNewPoint() {
-    unrender(this._pointEdit.getElement());
+    unrender(this._pointEdit.element);
     this._pointEdit.removeElement();
     this._removeNewPoint();
     document.removeEventListener(`keydown`, this._onEscKeyDown);

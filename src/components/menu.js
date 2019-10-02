@@ -3,11 +3,11 @@ import AbstractComponent from "./abstract-component";
 class Menu extends AbstractComponent {
   constructor() {
     super();
-    this._menuItemTable = this.getElement().querySelector(`[data-menu-item = table]`);
-    this._menuItemStats = this.getElement().querySelector(`[data-menu-item = stats]`);
+    this._menuItemTable = this.element.querySelector(`[data-menu-item = table]`);
+    this._menuItemStats = this.element.querySelector(`[data-menu-item = stats]`);
   }
 
-  getTemplate() {
+  get template() {
     return `<nav class="trip-controls__trip-tabs  trip-tabs">
         <a data-menu-item="table" class="trip-tabs__btn trip-tabs__btn--active" href="#">Table</a>
         <a data-menu-item="stats" class="trip-tabs__btn" href="#">Stats</a>

@@ -7,9 +7,6 @@ class StatsController {
   constructor(container) {
     this._container = container;
     this._stats = new Stats();
-    this._moneyCtx = this._stats.getElement().querySelector(`.statistics__chart--money`);
-    this._transportCtx = this._stats.getElement().querySelector(`.statistics__chart--transport`);
-    this._timeCtx = this._stats.getElement().querySelector(`.statistics__chart--time`);
 
     this._pointsTypes = [];
     this._uniquePointTypes = [];
@@ -23,7 +20,7 @@ class StatsController {
   init(points) {
     this._structureData(points);
 
-    this._moneyChart = new Chart(this._moneyCtx, {
+    this._moneyChart = new Chart(this._stats.moneyCtx, {
       plugins: [ChartDataLabels],
       type: `horizontalBar`,
       data: {
@@ -90,7 +87,7 @@ class StatsController {
       },
     });
 
-    this._transportChart = new Chart(this._transportCtx, {
+    this._transportChart = new Chart(this._stats.transportCtx, {
       plugins: [ChartDataLabels],
       type: `horizontalBar`,
       data: {
@@ -157,7 +154,7 @@ class StatsController {
       },
     });
 
-    this._timeChart = new Chart(this._timeCtx, {
+    this._timeChart = new Chart(this._stats.timeCtx, {
       plugins: [ChartDataLabels],
       type: `horizontalBar`,
       data: {
@@ -240,15 +237,15 @@ class StatsController {
   }
 
   hide() {
-    this._stats.getElement().classList.add(`visually-hidden`);
+    this._stats.hide();
   }
 
   show() {
-    this._stats.getElement().classList.remove(`visually-hidden`);
+    this._stats.show();
   }
 
   _create() {
-    render(this._container, this._stats.getElement(), Position.BEFOREEND);
+    render(this._container, this._stats.element, Position.BEFOREEND);
   }
 
   _structureData(data) {

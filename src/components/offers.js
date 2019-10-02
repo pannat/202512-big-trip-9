@@ -6,7 +6,7 @@ class Offers extends AbstractComponent {
     this._offers = offers;
   }
 
-  getTemplate() {
+  get template() {
     return `<section class="event__section  event__section--offers">
                   <h3 class="event__section-title  event__section-title--offers">Offers</h3>
                   <div class="event__available-offers">
@@ -24,8 +24,8 @@ class Offers extends AbstractComponent {
   }
 
   get OffersOfSelectedType() {
-    const priceElementsOfOffers = this.getElement().querySelectorAll(`.event__offer-price`);
-    return Array.from(this.getElement().querySelectorAll(`.event__offer-checkbox`)).map((input, index) => ({
+    const priceElementsOfOffers = this.element.querySelectorAll(`.event__offer-price`);
+    return Array.from(this.element.querySelectorAll(`.event__offer-checkbox`)).map((input, index) => ({
       title: input.name.slice(12),
       price: Number(priceElementsOfOffers[index].textContent),
       accepted: Boolean(input.checked)

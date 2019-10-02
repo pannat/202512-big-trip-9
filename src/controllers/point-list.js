@@ -99,9 +99,9 @@ class PointListController {
 
   _createDay(points, date, dayNumber) {
     const day = new Day(points.length, date, dayNumber);
-    const pointsContainers = day.getElement().querySelectorAll(`.trip-events__item`);
+    const pointsContainers = day.element.querySelectorAll(`.trip-events__item`);
     points.forEach((point, index) => this._createPoint(pointsContainers[index], point));
-    render(this._container, day.getElement(), Position.BEFOREEND);
+    render(this._container, day.element, Position.BEFOREEND);
   }
 
   _createPoint(container, data) {

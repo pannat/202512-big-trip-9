@@ -42,12 +42,12 @@ class AbstractPointController {
       }
     };
 
-    this._pointEdit.getElement().addEventListener(`change`, onChangeForm);
+    this._pointEdit.element.addEventListener(`change`, onChangeForm);
   }
 
   _updateOffersForCurrentType(currentValue) {
     const offersForCurrentType = AbstractPointController.offers.find((offer) => offer.type === currentValue.toLowerCase()).offers;
-    unrender(this._offersComponent.getElement());
+    unrender(this._offersComponent.element);
     this._offersComponent.removeElement();
     if (offersForCurrentType.length) {
       this._createOffers(offersForCurrentType);
@@ -56,7 +56,7 @@ class AbstractPointController {
 
   _updateDestinationForCurrentCity(currentValue) {
     const destinationInfoForCurrentCity = AbstractPointController.destinations.find((destination) => destination.name === currentValue);
-    unrender(this._destinationComponent.getElement());
+    unrender(this._destinationComponent.element);
     this._destinationComponent.removeElement();
     if (destinationInfoForCurrentCity) {
       this._createDestination(destinationInfoForCurrentCity);
@@ -65,16 +65,16 @@ class AbstractPointController {
 
   _createOffers(data) {
     this._offersComponent = new OffersComponent(data);
-    render(this._pointEdit.ContainerEventDetails, this._offersComponent.getElement(), Position.AFTERBEGIN);
+    render(this._pointEdit.ContainerEventDetails, this._offersComponent.element, Position.AFTERBEGIN);
   }
 
   _createDestination(destination) {
     this._destinationComponent = new DestinationComponent(destination);
-    render(this._pointEdit.ContainerEventDetails, this._destinationComponent.getElement(), Position.BEFOREEND);
+    render(this._pointEdit.ContainerEventDetails, this._destinationComponent.element, Position.BEFOREEND);
   }
 
   _createNewData() {
-    const formData = new FormData(this._pointEdit.getElement());
+    const formData = new FormData(this._pointEdit.element);
     return {
       type: formData.get(InputName.TYPE),
       city: formData.get(InputName.DESTINATION),

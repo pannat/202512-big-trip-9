@@ -75,7 +75,7 @@ api.getDestinations()
     }));
 
 const menu = new Menu();
-render(siteTripControlsElement, menu.getElement(), Position.AFTERBEGIN);
+render(siteTripControlsElement, menu.element, Position.AFTERBEGIN);
 
 const onMenuClick = (evt) => {
   evt.preventDefault();
@@ -98,7 +98,7 @@ const onMenuClick = (evt) => {
   }
 };
 
-menu.getElement().addEventListener(`click`, (evt) => onMenuClick(evt));
+menu.element.addEventListener(`click`, (evt) => onMenuClick(evt));
 
 siteButtonNewPointElement.addEventListener(`click`, () => {
   tripController.createNewPoint();

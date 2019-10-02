@@ -27,12 +27,12 @@ class AbstractPoint extends AbstractComponent {
   }
 
   get ContainerEventDetails() {
-    this._containerEventDetails = this.getElement().querySelector(`.event__details`);
+    this._containerEventDetails = this.element.querySelector(`.event__details`);
     return this._containerEventDetails;
   }
 
   initializeCalendars() {
-    flatpickr(this.getElement().querySelector(`input[name=event-start-time]`), {
+    flatpickr(this.element.querySelector(`input[name=event-start-time]`), {
       altInput: true,
       altFormat: `d.m.Y H:i`,
       [`time_24hr`]: true,
@@ -44,7 +44,7 @@ class AbstractPoint extends AbstractComponent {
       }
     });
 
-    const calendarEnd = flatpickr(this.getElement().querySelector(`input[name=event-end-time]`), {
+    const calendarEnd = flatpickr(this.element.querySelector(`input[name=event-end-time]`), {
       altInput: true,
       altFormat: `d.m.Y H:i`,
       [`time_24hr`]: true,
@@ -69,8 +69,8 @@ class AbstractPoint extends AbstractComponent {
       input.disabled = true;
     });
 
-    this._element.querySelector(`.event__rollup-btn`).disabled = true;
-    this._element.querySelector(`.event__reset-btn`).disabled = true;
+    this.element.querySelector(`.event__rollup-btn`).disabled = true;
+    this.element.querySelector(`.event__reset-btn`).disabled = true;
     const saveButton = this._element.querySelector(`.event__save-btn`);
     saveButton.disabled = true;
     saveButton.textContent = `Saving....`;
@@ -78,12 +78,12 @@ class AbstractPoint extends AbstractComponent {
 
   setSelectedType(type) {
     this._uncheckedTypeInput();
-    this._element.querySelector(`.event__type-output`).textContent = `${type} ${getPreposition(type)}`;
-    this._element.querySelector(`.event__type-icon`).src = `img/icons/${type.toLowerCase()}.png`;
+    this.element.querySelector(`.event__type-output`).textContent = `${type} ${getPreposition(type)}`;
+    this.element.querySelector(`.event__type-icon`).src = `img/icons/${type.toLowerCase()}.png`;
   }
 
   _uncheckedTypeInput() {
-    this._element.querySelector(`.event__type-toggle`).checked = false;
+    this.element.querySelector(`.event__type-toggle`).checked = false;
   }
 }
 

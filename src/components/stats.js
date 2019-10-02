@@ -5,7 +5,7 @@ class Stats extends AbstractComponent {
     super();
   }
 
-  getTemplate() {
+  get template() {
     return `<section class="statistics visually-hidden">
           <h2 class="visually-hidden">Trip statistics</h2>
 
@@ -21,6 +21,29 @@ class Stats extends AbstractComponent {
             <canvas class="statistics__chart  statistics__chart--time" width="900"></canvas>
           </div>
         </section>`;
+  }
+
+  get moneyCtx() {
+    this._moneyCtx = this.element.querySelector(`.statistics__chart--money`);
+    return this._moneyCtx;
+  }
+
+  get transportCtx() {
+    this._transportCtx = this.element.querySelector(`.statistics__chart--transport`);
+    return this._transportCtx;
+  }
+
+  get timeCtx() {
+    this._timeCtx = this.element.querySelector(`.statistics__chart--time`);
+    return this._timeCtx;
+  }
+
+  hide() {
+    this.element.classList.add(`visually-hidden`);
+  }
+
+  show() {
+    this.element.classList.remove(`visually-hidden`);
   }
 }
 

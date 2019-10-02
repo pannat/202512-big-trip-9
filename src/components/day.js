@@ -9,7 +9,7 @@ class Day extends AbstractComponent {
     this._pointsNumber = pointsNumber;
   }
 
-  getTemplate() {
+  get template() {
     return `<li class="trip-days__item  day">
               <div class="day__info">
                 <span class="day__counter">${this._dayNumber === undefined ? `` : this._dayNumber + 1}</span>

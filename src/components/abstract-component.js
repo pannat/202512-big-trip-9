@@ -8,20 +8,20 @@ class AbstractComponent {
     }
   }
 
-  getElement() {
+  get element() {
     if (!this._element) {
-      this._element = createElement(this.getTemplate());
+      this._element = createElement(this.template);
     }
 
     return this._element;
   }
 
-  removeElement() {
-    this._element = null;
+  get template() {
+    throw new Error(`Abstract method not implemented: getTemplate`);
   }
 
-  getTemplate() {
-    throw new Error(`Abstract method not implemented: getTemplate`);
+  removeElement() {
+    this._element = null;
   }
 }
 

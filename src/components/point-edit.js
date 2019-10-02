@@ -1,13 +1,12 @@
 import moment from "moment";
 import AbstractPoint from "./abstract-point";
-import {getPreposition} from "../utils";
 
 class PointEdit extends AbstractPoint {
   constructor({type, city, dates, price, isFavorite}, destinationCities) {
     super({type, city, dates, price, isFavorite}, destinationCities);
   }
 
-  getTemplate() {
+  get template() {
     return `<form class="event  event--edit" action="#" method="post">
               <header class="event__header">
                 <div class="event__type-wrapper">

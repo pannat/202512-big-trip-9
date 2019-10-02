@@ -8,7 +8,7 @@ class Destination extends AbstractComponent {
     this._photos = pictures;
   }
 
-  getTemplate() {
+  get template() {
     return `<section class="event__section  event__section--destination">
                   <h3 class="event__section-title  event__section-title--destination">Destination</h3>
                   <p class="event__destination-description">${this._description}</p>
@@ -22,11 +22,11 @@ class Destination extends AbstractComponent {
   }
 
   get DescriptionOfSelectedDestination() {
-    return this.getElement().querySelector(InputName.DESCRIPTION).textContent;
+    return this.element.querySelector(InputName.DESCRIPTION).textContent;
   }
 
   get PicturesOfSelectedDestination() {
-    return Array.from(this.getElement().querySelectorAll(`.event__photo`)).map((photo) => (
+    return Array.from(this.element.querySelectorAll(`.event__photo`)).map((photo) => (
       {
         src: photo.src,
         description: photo.alt
