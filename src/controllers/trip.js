@@ -102,11 +102,11 @@ class TripController {
         this._pointListController.renderPointList(this._sortComponent.checkedItem, this._points, this._daysListComponent.element);
         break;
       case FilterType.FUTURE:
-        const filteredPointsByFuture = this._points.filter(({dates}) => dates.start > moment());
+        const filteredPointsByFuture = this._points.filter(({dates}) => dates.start > moment().add(1, `days`));
         this._pointListController.renderPointList(this._sortComponent.checkedItem, filteredPointsByFuture, this._daysListComponent.element);
         break;
       case FilterType.PAST:
-        const filteredPointsByPast = this._points.filter(({dates}) => dates.start < moment());
+        const filteredPointsByPast = this._points.filter(({dates}) => dates.start < moment().subtract(1, `days`));
         this._pointListController.renderPointList(this._sortComponent.checkedItem, filteredPointsByPast, this._daysListComponent.element);
         break;
     }

@@ -3,6 +3,11 @@ import Chart from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import {formatDuration, getUniqueList, groupToType, Position, render} from "../utils";
 
+const Resource = {
+  PRICE: `price`,
+  TIME: `duration`
+};
+
 class StatsController {
   constructor(container) {
     this._container = container;
@@ -25,7 +30,7 @@ class StatsController {
       type: `horizontalBar`,
       data: {
         datasets: [{
-          data: this._uniquePointTypes.map((type) => this._calculateSpentResourcesByTypes(type, `price`, points)),
+          data: this._uniquePointTypes.map((type) => this._calculateSpentResourcesByTypes(type, Resource.PRICE, points)),
           backgroundColor: `#ffffff`,
         }]
       },
@@ -159,7 +164,7 @@ class StatsController {
       type: `horizontalBar`,
       data: {
         datasets: [{
-          data: this._uniquePointTypes.map((type) => this._calculateSpentResourcesByTypes(type, `duration`, points)),
+          data: this._uniquePointTypes.map((type) => this._calculateSpentResourcesByTypes(type, Resource.TIME, points)),
           backgroundColor: `#ffffff`,
         }]
       },
@@ -224,7 +229,7 @@ class StatsController {
   updateCharts(points) {
     this._structureData(points);
     this._moneyChart.data.datasets.map((dataset) => {
-      dataset.data = this._uniquePointTypes.map((type) => this._calculateSpentResourcesByTypes(type, `price`, points));
+      dataset.data = this._uniquePointTypes.map((type) => this._calculateSpentResourcesByTypes(type, Resource.PRICE, points));
     });
     this._moneyChart.options.scales.yAxes.map((yAxis) => {
       yAxis.labels = this._uniquePointTypes.map((type) => type.toUpperCase());
@@ -239,7 +244,7 @@ class StatsController {
     });
 
     this._timeChart.data.datasets.map((dataset) => {
-      dataset.data = this._uniquePointTypes.map((type) => this._calculateSpentResourcesByTypes(type, `duration`, points));
+      dataset.data = this._uniquePointTypes.map((type) => this._calculateSpentResourcesByTypes(type, Resource.TIME, points));
     });
 
     this._timeChart.options.scales.yAxes.map((yAxis) => {

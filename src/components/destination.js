@@ -1,5 +1,6 @@
 import AbstractComponent from "./abstract-component";
 import {InputName} from "../utils";
+import dompurify from "dompurify";
 
 class Destination extends AbstractComponent {
   constructor({description, pictures}) {
@@ -11,11 +12,11 @@ class Destination extends AbstractComponent {
   get template() {
     return `<section class="event__section  event__section--destination">
                   <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-                  <p class="event__destination-description">${this._description}</p>
+                  <p class="event__destination-description">${dompurify.sanitize(this._description)}</p>
 
                   <div class="event__photos-container">
                     <div class="event__photos-tape">
-                      ${this._photos.map((photo) => `<img class="event__photo" src="${photo.src}" alt="${photo.description}">`).join(``)}
+                      ${this._photos.map((photo) => `<img class="event__photo" src="${dompurify.sanitize(photo.src)}" alt="${dompurify.sanitize(photo.description)}">`).join(``)}
                     </div>
                   </div>
                 </section>`;

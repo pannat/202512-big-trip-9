@@ -50,6 +50,7 @@ class NewPointController extends AbstractPointController {
       this._data.update(this._createNewData());
       this._onDataChange(Action.CREATE, this._data, () => {
         this._onError();
+        this._pointEdit.changeTextSaveButton(`Save`);
       });
       this._pointEdit.disableForm(true);
       this._pointEdit.changeTextSaveButton(`Saving...`);

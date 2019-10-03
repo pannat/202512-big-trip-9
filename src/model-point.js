@@ -1,11 +1,12 @@
 import moment from "moment";
+import dompurify from "dompurify";
 
 export default class ModelPoint {
   constructor(data) {
-    this.id = data[`id`];
-    this.type = data.type ? `${data[`type`][0].toUpperCase()}${data[`type`].slice(1)}` : ``;
-    this.city = data[`destination`][`name`];
-    this.description = data[`destination`][`description`];
+    this.id = dompurify.sanitize(data[`id`]);
+    this.type = `${dompurify.sanitize(data[`type`][0].toUpperCase())}${dompurify.sanitize(data[`type`]).slice(1)}`;
+    this.city = dompurify.sanitize(data[`destination`][`name`]);
+    this.description = dompurify.sanitize(data[`destination`][`description`]);
     this.pictures = data[`destination`][`pictures`];
     this.dates = {
       start: new Date(data[`date_from`]),
@@ -13,8 +14,8 @@ export default class ModelPoint {
     };
     this.duration = moment(this.dates.end).diff(moment(this.dates.start));
     this.offers = Array.from(data[`offers`]);
-    this.price = Number(data[`base_price`]);
-    this.isFavorite = Boolean(data[`is_favorite`]);
+    this.price = Number(dompurify.sanitize(data[`base_price`]));
+    this.isFavorite = Boolean(dompurify.sanitize(data[`is_favorite`]));
   }
 
   update(changedData) {

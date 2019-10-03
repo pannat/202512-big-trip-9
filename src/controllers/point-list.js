@@ -34,7 +34,7 @@ class PointListController {
     }
 
     const localPoint = {
-      [`id`]: String(this._points.length),
+      [`id`]: this._points.length,
       [`base_price`]: 0,
       [`date_from`]: moment().format(),
       [`date_to`]: moment().add(1, `hour`).format(),
@@ -45,7 +45,7 @@ class PointListController {
       },
       [`is_favorite`]: false,
       [`offers`]: [],
-      [`type`]: ``
+      [`type`]: `taxi`
     };
 
     this._newPointController = new NewPointController(container, new ModelPoint(localPoint), this._onDataChange, this._onChangeView, () => {

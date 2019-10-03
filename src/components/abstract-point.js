@@ -23,7 +23,10 @@ class AbstractPoint extends AbstractComponent {
     this._resetButton = null;
     this._inputs = null;
     this._saveButton = null;
+    this._calendarStart = null;
+    this._calendarEnd = null;
     this._rollupButton = this.element.querySelector(`.event__rollup-btn`);
+
 
     if (new.target === AbstractPoint) {
       throw new Error(`Can't instantiate AbstractPoint, only concrete one.`);
@@ -83,19 +86,7 @@ class AbstractPoint extends AbstractComponent {
   }
 
   initializeCalendars() {
-    flatpickr(this.element.querySelector(`input[name=${InputName.START_TIME}]`), {
-      altInput: true,
-      altFormat: `d.m.Y H:i`,
-      [`time_24hr`]: true,
-      enableTime: true,
-      dateFormat: `Y-m-d H:i`,
-      defaultDate: this._dates.start,
-      onChange(selectedDates) {
-        calendarEnd.config.minDate = new Date(selectedDates);
-      }
-    });
-
-    const calendarEnd = flatpickr(this.element.querySelector(`input[name=${InputName.END_TIME}]`), {
+    this._calendarEnd = flatpickr(this.element.querySelector(`input[name=${InputName.END_TIME}]`), {
       altInput: true,
       altFormat: `d.m.Y H:i`,
       [`time_24hr`]: true,
@@ -103,6 +94,18 @@ class AbstractPoint extends AbstractComponent {
       dateFormat: `Y-m-d H:i`,
       defaultDate: this._dates.end,
       minDate: this._dates.start,
+    });
+
+    this._calendarStart = flatpickr(this.element.querySelector(`input[name=${InputName.START_TIME}]`), {
+      altInput: true,
+      altFormat: `d.m.Y H:i`,
+      [`time_24hr`]: true,
+      enableTime: true,
+      dateFormat: `Y-m-d H:i`,
+      defaultDate: this._dates.start,
+      onChange(selectedDates) {
+        this._calendarEnd.config.minDate = new Date(selectedDates);
+      }
     });
   }
 

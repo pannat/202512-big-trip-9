@@ -1,6 +1,7 @@
 import {formatDuration, getPreposition} from "../utils";
 import moment from 'moment';
 import AbstractComponent from "./abstract-component";
+import dompurify from "dompurify";
 
 const MAX_COUNT_OFFERS = 3;
 
@@ -36,10 +37,10 @@ class Point extends AbstractComponent {
               <h4 class="visually-hidden">Offers:</h4>
               <ul class="event__selected-offers">
                   ${this._offers.filter((offer) => offer.accepted).slice(0, MAX_COUNT_OFFERS).map((offer) => `<li class="event__offer">
-                    <span class="event__offer-title">${offer.title}</span>
+                    <span class="event__offer-title">${dompurify.sanitize(offer.title)}</span>
                     +
                     &euro;
-                    <span class="event__offer-price">${offer.price}</span>
+                    <span class="event__offer-price">${dompurify.sanitize(offer.price)}</span>
                 </li>`).join(``)}
               </ul>
               <button class="event__rollup-btn" type="button">
