@@ -223,14 +223,29 @@ class StatsController {
 
   updateCharts(points) {
     this._structureData(points);
-    this._moneyChart.data.datasets[0].data = this._uniquePointTypes.map((type) => this._calculateSpentResourcesByTypes(type, `price`, points));
-    this._moneyChart.options.scales.yAxes[0].labels = this._uniquePointTypes.map((type) => type.toUpperCase());
+    this._moneyChart.data.datasets.map((dataset) => {
+      dataset.data = this._uniquePointTypes.map((type) => this._calculateSpentResourcesByTypes(type, `price`, points));
+    });
+    this._moneyChart.options.scales.yAxes.map((yAxis) => {
+      yAxis.labels = this._uniquePointTypes.map((type) => type.toUpperCase());
+    });
 
-    this._transportChart.data.datasets[0].data = this._uniquePointTypesTransfer.map((type) => this._countTransportTrips[type]);
-    this._transportChart.options.scales.yAxes[0].labels = this._uniquePointTypesTransfer.map((type) => type.toUpperCase());
+    this._transportChart.data.datasets.map((dataset) => {
+      dataset.data = this._uniquePointTypesTransfer.map((type) => this._countTransportTrips[type]);
+    });
 
-    this._timeChart.data.datasets[0].data = this._uniquePointTypes.map((type) => this._calculateSpentResourcesByTypes(type, `duration`, points));
-    this._timeChart.options.scales.yAxes[0].labels = this._uniquePointTypes.map((type) => type.toUpperCase());
+    this._transportChart.options.scales.yAxes.map((yAxis) => {
+      yAxis.labels = this._uniquePointTypesTransfer.map((type) => type.toUpperCase());
+    });
+
+    this._timeChart.data.datasets.map((dataset) => {
+      dataset.data = this._uniquePointTypes.map((type) => this._calculateSpentResourcesByTypes(type, `duration`, points));
+    });
+
+    this._timeChart.options.scales.yAxes.map((yAxis) => {
+      yAxis.labels = this._uniquePointTypes.map((type) => type.toUpperCase());
+    });
+
     this._moneyChart.update();
     this._transportChart.update();
     this._timeChart.update();

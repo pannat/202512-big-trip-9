@@ -7,6 +7,12 @@ import moment from "moment";
 import PointListController from "./point-list";
 import MessageNoPoints from "../components/message-no-points";
 
+const FilterType = {
+  EVERYTHING: `everything`,
+  FUTURE: `future`,
+  PAST: `past`
+};
+
 class TripController {
   constructor(container, tripTotalCostElement, tripInfoContainerElement, filterContainerElement, onDataChange) {
     this._container = container;
@@ -40,11 +46,8 @@ class TripController {
       render(this._filterContainerElement, this._filterComponent.element, Position.BEFOREEND);
 
 
-      this._filterComponent.element.addEventListener(`click`, (evt) => {
-        this._appliesFilterToList(evt.target);
-      });
-      this._sortComponent.element
-        .addEventListener(`click`, (evt) => this._onSortInputClick(evt));
+      this._filterComponent.element.addEventListener(`click`, (evt) => this._onFilterInputClick(evt));
+      this._sortComponent.element.addEventListener(`click`, (evt) => this._onSortInputClick(evt));
     } else {
       this._setDefaultTripInfo();
       render(this._daysListComponent.element, this._messageNoPointsComponent.element, Position.BEFOREEND);
@@ -60,11 +63,10 @@ class TripController {
     if (points.length) {
       this._points = points.slice().sort((a, b) => a.dates.start - b.dates.start);
       this._pointsSortedByEndDate = this._points.slice().sort((a, b) => b.dates.end - a.dates.end);
-
       this._sortComponent.checkAvailable();
+      this._appliesFilterToList(this._filterComponent.checkedItem);
       this._tripTotalCostElement.textContent = this._calculateTotalCost();
       this._tripInfoComponent.update();
-      this._appliesFilterToList(this._filterComponent.checkedItem);
     } else {
       this._filterComponent.hide();
       this._sortComponent.hide();
@@ -77,7 +79,9 @@ class TripController {
 
   show() {
     this._container.classList.remove(`trip-events--hidden`);
-    this._filterComponent.show();
+    if (this._points.length) {
+      this._filterComponent.show();
+    }
   }
 
   hide() {
@@ -94,14 +98,14 @@ class TripController {
     this._daysListComponent.removeElement();
 
     switch (element.dataset.filterType) {
-      case `everything`:
+      case FilterType.EVERYTHING:
         this._pointListController.renderPointList(this._sortComponent.checkedItem, this._points, this._daysListComponent.element);
         break;
-      case `future`:
+      case FilterType.FUTURE:
         const filteredPointsByFuture = this._points.filter(({dates}) => dates.start > moment());
         this._pointListController.renderPointList(this._sortComponent.checkedItem, filteredPointsByFuture, this._daysListComponent.element);
         break;
-      case `past`:
+      case FilterType.PAST:
         const filteredPointsByPast = this._points.filter(({dates}) => dates.start < moment());
         this._pointListController.renderPointList(this._sortComponent.checkedItem, filteredPointsByPast, this._daysListComponent.element);
         break;
@@ -145,6 +149,14 @@ class TripController {
       unrender(this._messageNoPointsComponent.element);
       this._messageNoPointsComponent.removeElement();
     }
+  }
+
+  _onFilterInputClick(evt) {
+    if (evt.target.tagName !== `INPUT`) {
+      return;
+    }
+
+    this._appliesFilterToList(evt.target);
   }
 
   _onSortInputClick(evt) {

@@ -3,10 +3,10 @@ import Menu from "./components/menu";
 import StatsController from "./controllers/stats";
 import TripController from "./controllers/trip";
 import API from "./api";
-import AbstractPointController from "./controllers/abstract-point";
 
-const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAo=0.09326721716349451`;
+const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAo=${Math.random()}`;
 const END_POINT = `https://htmlacademy-es-9.appspot.com/big-trip`;
+
 const MenuItem = {
   TABLE: `table`,
   STATS: `stats`
@@ -25,15 +25,19 @@ const siteTripControlsElement = siteTripMainElement.querySelector(`.trip-control
 const siteButtonNewPointElement = siteTripMainElement.querySelector(`.trip-main__event-add-btn`);
 const sitePageMainContainerElement = document.querySelector(`.page-main .page-body__container`);
 const siteTripEventsElement = sitePageMainContainerElement.querySelector(`.trip-events`);
+let availableDestinations = [];
+let availableOffers = [];
 
-const api = new API(END_POINT, AUTHORIZATION);
-
-const onDataChange = (actionType, data) => {
+const onDataChange = (actionType, data, onError) => {
   switch (actionType) {
     case Action.DELETE:
       api.deletePoints({
         id: data.id
       })
+        .catch((err) => {
+          onError();
+          throw err;
+        })
         .then(() => api.getPoints())
         .then((points) => {
           tripController.update(points);
@@ -45,6 +49,10 @@ const onDataChange = (actionType, data) => {
         id: data.id,
         data: data.toRAW()
       })
+        .catch((err) => {
+          onError();
+          throw err;
+        })
         .then(() => api.getPoints())
         .then((points) => {
           tripController.update(points);
@@ -53,6 +61,10 @@ const onDataChange = (actionType, data) => {
       break;
     case Action.CREATE:
       api.createPoints({data: data.toRAW()})
+        .catch((err) => {
+          onError();
+          throw err;
+        })
         .then(() => api.getPoints())
         .then((points) => {
           tripController.update(points);
@@ -61,13 +73,19 @@ const onDataChange = (actionType, data) => {
   }
 };
 
+const api = new API(END_POINT, AUTHORIZATION);
+
 const tripController = new TripController(siteTripEventsElement, siteTotalCostElement, siteTripInfoElement, siteTripControlsElement, onDataChange);
 const statsController = new StatsController(sitePageMainContainerElement);
 
 api.getDestinations()
-  .then((destinations) => AbstractPointController.setDestinations(destinations))
+  .then((destinations) => {
+    availableDestinations = destinations;
+  })
   .then(() => api.getOffers()
-    .then((offers) => AbstractPointController.setOffers(offers)))
+    .then((offers) => {
+      availableOffers = offers;
+    }))
   .then(() => api.getPoints()
     .then((points) => {
       tripController.init(points);
@@ -107,5 +125,5 @@ siteButtonNewPointElement.addEventListener(`click`, () => {
   menu.setActiveButtonTable();
 });
 
-export {Action};
+export {Action, availableDestinations, availableOffers};
 

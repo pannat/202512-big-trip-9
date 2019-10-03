@@ -28,7 +28,7 @@ class Filter extends AbstractComponent {
 
   get checkedItem() {
     this._checkedItem = this.element.querySelector(`.trip-filters__filter-input:checked`);
-    return this._checkedFilter;
+    return this._checkedItem;
   }
 
   show() {

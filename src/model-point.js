@@ -17,12 +17,8 @@ export default class ModelPoint {
     this.isFavorite = Boolean(data[`is_favorite`]);
   }
 
-  static parsePoint(data) {
-    return new ModelPoint(data);
-  }
-
-  static parsePoints(data) {
-    return data.map(ModelPoint.parsePoint);
+  update(changedData) {
+    Object.assign(this, changedData);
   }
 
   toRAW() {
@@ -40,5 +36,13 @@ export default class ModelPoint {
       [`base_price`]: this.price,
       [`is_favorite`]: this.isFavorite,
     };
+  }
+
+  static parsePoint(data) {
+    return new ModelPoint(data);
+  }
+
+  static parsePoints(data) {
+    return data.map(ModelPoint.parsePoint);
   }
 }

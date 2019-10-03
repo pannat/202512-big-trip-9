@@ -4,6 +4,8 @@ import AbstractPoint from "./abstract-point";
 class PointEdit extends AbstractPoint {
   constructor({type, city, dates, price, isFavorite}, destinationCities) {
     super({type, city, dates, price, isFavorite}, destinationCities);
+    this._rollupButton = null;
+    this._toggleTypeInput = null;
   }
 
   get template() {
@@ -70,7 +72,41 @@ class PointEdit extends AbstractPoint {
             </form>`;
   }
 
-  revertDestination(callback) {
+  get rollupButton() {
+    if (!this._rollupButton) {
+      this._rollupButton = this.element.querySelector(`.event__rollup-btn`);
+    }
+    return this._rollupButton;
+  }
+
+  get toggleTypeInput() {
+    if (!this._toggleTypeInput) {
+      this._toggleTypeInput = this.element.querySelector(`.event__type-toggle`);
+    }
+    return this._toggleTypeInput;
+  }
+
+  changeTextResetButton(text) {
+    this._resetButton.textContent = text;
+  }
+
+  disableForm(isDisabled) {
+    this._disableInputs(isDisabled);
+    this._disableRollupButton(isDisabled);
+    this._disableButtons(isDisabled);
+  }
+
+  cancelChange(updateDestination, updateOffers) {
+    this.initializeCalendars();
+    this._revertDestination(updateDestination);
+    this._revertType(updateOffers);
+    this._revertPrice();
+    this._revertFavorite();
+    this._removeHighlight();
+    this.applyClassForContainerEventDetails();
+  }
+
+  _revertDestination(callback) {
     const destinationInput = this._element.querySelector(`.event__input--destination`);
     if (destinationInput.value !== this._city) {
       destinationInput.value = this._city;
@@ -78,24 +114,24 @@ class PointEdit extends AbstractPoint {
     }
   }
 
-  revertType(callback) {
+  _revertType(callback) {
     const checkedTypeInput = this._element.querySelector(`.event__type-input:checked`);
     if (checkedTypeInput.value !== this._choosenType) {
-      this.setSelectedType(this._choosenType);
+      this.applySelectedType(this._choosenType);
       checkedTypeInput.checked = false;
       this._element.querySelector(`#event-type-${this._choosenType}-1`).checked = true;
       callback(this._choosenType);
     }
   }
 
-  revertPrice() {
+  _revertPrice() {
     const priceInput = this._element.querySelector(`.event__input--price`);
     if (Number(priceInput.value) !== this._price) {
       priceInput.value = this._price;
     }
   }
 
-  revertFavorite() {
+  _revertFavorite() {
     const isFavoriteInput = this._element.querySelector(`.event__favorite-checkbox`);
     if (isFavoriteInput.checked !== this._isFavorite) {
       isFavoriteInput.checked = this._isFavorite;

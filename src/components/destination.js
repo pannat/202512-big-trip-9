@@ -21,11 +21,11 @@ class Destination extends AbstractComponent {
                 </section>`;
   }
 
-  get DescriptionOfSelectedDestination() {
+  calculateDescriptionOfSelectedDestination() {
     return this.element.querySelector(InputName.DESCRIPTION).textContent;
   }
 
-  get PicturesOfSelectedDestination() {
+  calculatePicturesOfSelectedDestination() {
     return Array.from(this.element.querySelectorAll(`.event__photo`)).map((photo) => (
       {
         src: photo.src,

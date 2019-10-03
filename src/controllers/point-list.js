@@ -2,7 +2,7 @@ import {Position, render, getUniqueList} from "../utils";
 import moment from "moment";
 import Day from "../components/day";
 import PointController from "./point";
-import NewPointController from "./new-point";
+import NewPointController from "./point-new";
 import ModelPoint from "../model-point";
 
 const SortType = {
@@ -19,13 +19,10 @@ class PointListController {
     this._uniqueDays = [];
     this._pointsDays = [];
     this._newPointController = null;
-
-
     this._onChangeView = this._onChangeView.bind(this);
     this._onDataChange = onDataChange;
-
-    this._getUniqueDays();
-    this._getPointsDays();
+    this._calculateUniqueDays();
+    this._calculatePointsDays();
 
     this._init();
   }
@@ -68,8 +65,8 @@ class PointListController {
 
     switch (element.dataset.sortType) {
       case SortType.EVENT:
-        this._getUniqueDays();
-        this._getPointsDays();
+        this._calculateUniqueDays();
+        this._calculatePointsDays();
         this._uniqueDays.forEach((data, count) => this._createDay(this._pointsDays[count], data, count));
         break;
       case SortType.PRICE:
@@ -89,18 +86,17 @@ class PointListController {
     this._subscriptions.forEach((it) => it());
   }
 
-  _getUniqueDays() {
+  _calculateUniqueDays() {
     this._uniqueDays = getUniqueList(this._points.map((point) => moment(point.dates.start).format(`MMM DD YYYY`)));
   }
 
-  _getPointsDays() {
+  _calculatePointsDays() {
     this._pointsDays = this._uniqueDays.map((day) => this._points.filter((point) => moment(point.dates.start).format(`MMM DD YYYY`) === day));
   }
 
   _createDay(points, date, dayNumber) {
     const day = new Day(points.length, date, dayNumber);
-    const pointsContainers = day.element.querySelectorAll(`.trip-events__item`);
-    points.forEach((point, index) => this._createPoint(pointsContainers[index], point));
+    points.forEach((point, index) => this._createPoint(day.eventsItem[index], point));
     render(this._container, day.element, Position.BEFOREEND);
   }
 

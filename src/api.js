@@ -19,6 +19,16 @@ class API {
       .then(ModelPoint.parsePoints);
   }
 
+  getDestinations() {
+    return this._load({url: `destinations`})
+      .then(API.toJSON);
+  }
+
+  getOffers() {
+    return this._load({url: `offers`})
+      .then(API.toJSON);
+  }
+
   deletePoints({id}) {
     return this._load({url: `points/${id}`, method: Method.DELETE});
   }
@@ -41,43 +51,18 @@ class API {
     });
   }
 
-
-  getDestinations() {
-    return this._load({url: `destinations`})
-      .then(API.toJSON);
-  }
-
-  getOffers() {
-    return this._load({url: `offers`})
-      .then(API.toJSON);
-  }
-
   _load({url, method = Method.GET, body = null, headers = new Headers()}) {
     headers.append(`Authorization`, this._authorization);
 
     return fetch(`${this._endPoint}/${url}`, {method, body, headers})
-      .then(API.checkStatus)
-      .catch((err) => {
-        API.onError(err);
-        throw err;
-      });
-  }
-
-  static onError(error) {
-    const node = document.createElement(`div`);
-    node.style = `width: 180px; margin: 0 auto; text-align: center; background-color: red;`;
-
-    node.textContent = error;
-    document.body.insertAdjacentElement(`afterbegin`, node);
+      .then(API.checkStatus);
   }
 
   static checkStatus(response) {
     if (response.status >= 200 && response.status < 300) {
       return response;
-    } else if (response.status === 404) {
-      return [];
     }
-    throw new Error(`${response.status}: ${response.statusText}`);
+    throw new Error(`${response.status} ${response.statusText}`);
   }
 
   static toJSON(response) {

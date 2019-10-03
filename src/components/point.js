@@ -1,12 +1,20 @@
-import {formatDuration} from "../utils";
+import {formatDuration, getPreposition} from "../utils";
 import moment from 'moment';
-import AbstractPoint from "./abstract-point";
+import AbstractComponent from "./abstract-component";
 
-class Point extends AbstractPoint {
+const MAX_COUNT_OFFERS = 3;
+
+class Point extends AbstractComponent {
   constructor({type, city, dates, price, offers, duration}) {
-    super({type, city, dates, price});
+    super();
+    this._choosenType = type ? type : ``;
+    this._preposition = getPreposition(type);
+    this._city = city;
+    this._dates = dates;
+    this._price = price;
     this._offers = offers;
     this._duration = formatDuration(duration);
+    this._rollupButton = null;
   }
 
   get template() {
@@ -27,7 +35,7 @@ class Point extends AbstractPoint {
               </p>
               <h4 class="visually-hidden">Offers:</h4>
               <ul class="event__selected-offers">
-                  ${this._offers.filter((offer) => offer.accepted).slice(0, 3).map((offer) => `<li class="event__offer">
+                  ${this._offers.filter((offer) => offer.accepted).slice(0, MAX_COUNT_OFFERS).map((offer) => `<li class="event__offer">
                     <span class="event__offer-title">${offer.title}</span>
                     +
                     &euro;
@@ -38,6 +46,13 @@ class Point extends AbstractPoint {
                 <span class="visually-hidden">Open event</span>
               </button>
             </div>`;
+  }
+
+  get rollupButton() {
+    if (!this._rollupButton) {
+      this._rollupButton = this.element.querySelector(`.event__rollup-btn`);
+    }
+    return this._rollupButton;
   }
 }
 

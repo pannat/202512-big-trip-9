@@ -23,13 +23,28 @@ class Offers extends AbstractComponent {
                 </section>`;
   }
 
-  get OffersOfSelectedType() {
+  get offersInput() {
+    if (!this._offerInputs) {
+      this._offerInputs = this.element.querySelectorAll(`.event__offer-checkbox`);
+    }
+    return this._offerInputs;
+  }
+
+  calculateOffersOfSelectedType() {
     const priceElementsOfOffers = this.element.querySelectorAll(`.event__offer-price`);
-    return Array.from(this.element.querySelectorAll(`.event__offer-checkbox`)).map((input, index) => ({
+    return Array.from(this.offersInput).map((input, index) => ({
       title: input.name.slice(12),
       price: Number(priceElementsOfOffers[index].textContent),
       accepted: Boolean(input.checked)
     }));
+  }
+
+  revertOffers() {
+    this.offersInput.forEach((offer) => {
+      if (offer.checked !== this._offers.accepted) {
+        offer.checked = this._offers.accepted;
+      }
+    });
   }
 
 

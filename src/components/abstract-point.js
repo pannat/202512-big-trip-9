@@ -1,5 +1,5 @@
 import AbstractComponent from "./abstract-component";
-import {groupToType, getPreposition} from "../utils";
+import {groupToType, InputName, getPreposition} from "../utils";
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 import "flatpickr/dist/themes/light.css";
@@ -20,19 +20,70 @@ class AbstractPoint extends AbstractComponent {
       start: `From`,
       end: `To`
     };
+    this._resetButton = null;
+    this._inputs = null;
+    this._saveButton = null;
+    this._rollupButton = this.element.querySelector(`.event__rollup-btn`);
 
     if (new.target === AbstractPoint) {
       throw new Error(`Can't instantiate AbstractPoint, only concrete one.`);
     }
   }
 
-  get ContainerEventDetails() {
-    this._containerEventDetails = this.element.querySelector(`.event__details`);
+  get resetButton() {
+    if (!this._resetButton) {
+      this._resetButton = this.element.querySelector(`.event__reset-btn`);
+    }
+    return this._resetButton;
+  }
+
+  get containerEventDetails() {
+    if (!this._containerEventDetails) {
+      this._containerEventDetails = this.element.querySelector(`.event__details`);
+    }
     return this._containerEventDetails;
   }
 
+  applyClassForContainerEventDetails() {
+    if (this.containerEventDetails.hasChildNodes()) {
+      this._containerEventDetailsShow();
+    } else {
+      this._containerEventDetailsHide();
+    }
+  }
+
+  applySelectedType(type) {
+    this._uncheckedTypeInput();
+    this.element.querySelector(`.event__type-output`).textContent = `${type} ${getPreposition(type)}`;
+    this.element.querySelector(`.event__type-icon`).src = `img/icons/${type.toLowerCase()}.png`;
+  }
+
+  changeTextSaveButton(text) {
+    this._saveButton.textContent = text;
+  }
+
+  disableForm() {
+    throw new Error(`Abstract method not implemented: disabledForm`);
+  }
+
+  shake() {
+    this.element.classList.add(`shake`);
+  }
+
+  highlight() {
+    this.element.style.border = `2px solid red`;
+  }
+
+  removeAnimation() {
+    this.element.classList.remove(`shake`);
+  }
+
+  _removeHighlight() {
+    this.element.style.border = `none`;
+  }
+
   initializeCalendars() {
-    flatpickr(this.element.querySelector(`input[name=event-start-time]`), {
+    flatpickr(this.element.querySelector(`input[name=${InputName.START_TIME}]`), {
       altInput: true,
       altFormat: `d.m.Y H:i`,
       [`time_24hr`]: true,
@@ -44,7 +95,7 @@ class AbstractPoint extends AbstractComponent {
       }
     });
 
-    const calendarEnd = flatpickr(this.element.querySelector(`input[name=event-end-time]`), {
+    const calendarEnd = flatpickr(this.element.querySelector(`input[name=${InputName.END_TIME}]`), {
       altInput: true,
       altFormat: `d.m.Y H:i`,
       [`time_24hr`]: true,
@@ -55,31 +106,34 @@ class AbstractPoint extends AbstractComponent {
     });
   }
 
-  setClassForContainerEventDetails() {
-    if (this._containerEventDetails.hasChildNodes()) {
-      this._containerEventDetails.classList.remove(`visually-hidden`);
-    } else {
-      this._containerEventDetails.classList.add(`visually-hidden`);
+  _containerEventDetailsShow() {
+    this._containerEventDetails.classList.remove(`visually-hidden`);
+  }
+
+  _containerEventDetailsHide() {
+    this._containerEventDetails.classList.add(`visually-hidden`);
+  }
+
+  _disableInputs(isDisabled) {
+    if (!this._inputs) {
+      this._inputs = this.element.querySelectorAll(`input`);
     }
-  }
 
-  disabledForm() {
-    const inputs = this._element.querySelectorAll(`input`);
-    inputs.forEach((input) => {
-      input.disabled = true;
+    this._inputs.forEach((input) => {
+      input.disabled = isDisabled;
     });
-
-    this.element.querySelector(`.event__rollup-btn`).disabled = true;
-    this.element.querySelector(`.event__reset-btn`).disabled = true;
-    const saveButton = this._element.querySelector(`.event__save-btn`);
-    saveButton.disabled = true;
-    saveButton.textContent = `Saving....`;
   }
 
-  setSelectedType(type) {
-    this._uncheckedTypeInput();
-    this.element.querySelector(`.event__type-output`).textContent = `${type} ${getPreposition(type)}`;
-    this.element.querySelector(`.event__type-icon`).src = `img/icons/${type.toLowerCase()}.png`;
+  _disableRollupButton(isDisabled) {
+    this.rollupButton.disabled = isDisabled;
+  }
+
+  _disableButtons(isDisabled) {
+    if (!this._saveButton) {
+      this._saveButton = this.element.querySelector(`.event__save-btn`);
+    }
+    this.resetButton.disabled = isDisabled;
+    this._saveButton.disabled = isDisabled;
   }
 
   _uncheckedTypeInput() {
