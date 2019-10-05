@@ -4,13 +4,13 @@ import dompurify from "dompurify";
 export default class ModelPoint {
   constructor(data) {
     this.id = dompurify.sanitize(data[`id`]);
-    this.type = `${dompurify.sanitize(data[`type`][0].toUpperCase())}${dompurify.sanitize(data[`type`]).slice(1)}`;
+    this.type = data[`type`] ? `${dompurify.sanitize(data[`type`][0].toUpperCase())}${dompurify.sanitize(data[`type`]).slice(1)}` : ``;
     this.city = dompurify.sanitize(data[`destination`][`name`]);
     this.description = dompurify.sanitize(data[`destination`][`description`]);
     this.pictures = data[`destination`][`pictures`];
     this.dates = {
-      start: new Date(data[`date_from`]),
-      end: new Date(data[`date_to`])
+      start: new Date(Number(dompurify.sanitize(data[`date_from`]))),
+      end: new Date(Number(dompurify.sanitize(data[`date_to`])))
     };
     this.duration = moment(this.dates.end).diff(moment(this.dates.start));
     this.offers = Array.from(data[`offers`]);

@@ -45,7 +45,7 @@ class PointListController {
       },
       [`is_favorite`]: false,
       [`offers`]: [],
-      [`type`]: `taxi`
+      [`type`]: ``
     };
 
     this._newPointController = new NewPointController(container, new ModelPoint(localPoint), this._onDataChange, this._onChangeView, () => {

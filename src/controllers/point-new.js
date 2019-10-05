@@ -8,7 +8,7 @@ class NewPointController extends AbstractPointController {
     super(container, data, onDataChange, onChangeView, PointAdd);
     this._removePointNew = removePointNew;
 
-    this._create();
+    this._init();
   }
 
   setDefaultView() {
@@ -17,14 +17,7 @@ class NewPointController extends AbstractPointController {
     }
   }
 
-  _create() {
-    const onEscKeyDown = (evt) => {
-      if (evt.key === Key.ESCAPE || evt.key === Key.ESCAPE_IE) {
-        this._closeNewPoint();
-        document.removeEventListener(`keydown`, onEscKeyDown);
-      }
-    };
-
+  _init() {
     const onChangeForm = (evt) => {
       if (evt.target.tagName !== `INPUT`) {
         return;
@@ -42,6 +35,13 @@ class NewPointController extends AbstractPointController {
           this._updateDestinationForCurrentCity(evt.target.value);
           this._pointEdit.applyClassForContainerEventDetails();
           break;
+      }
+    };
+
+    const onEscKeyDown = (evt) => {
+      if (evt.key === Key.ESCAPE || evt.key === Key.ESCAPE_IE) {
+        this._closeNewPoint();
+        document.removeEventListener(`keydown`, onEscKeyDown);
       }
     };
 

@@ -120,9 +120,6 @@ menu.element.addEventListener(`click`, (evt) => onMenuClick(evt));
 
 siteButtonNewPointElement.addEventListener(`click`, () => {
   tripController.createNewPoint();
-  tripController.show();
-  statsController.hide();
-  menu.setActiveButtonTable();
 });
 
 export {Action, availableDestinations, availableOffers};

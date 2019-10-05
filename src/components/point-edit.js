@@ -5,8 +5,13 @@ import dompurify from "dompurify";
 class PointEdit extends AbstractPoint {
   constructor({type, city, dates, price, isFavorite}, destinationCities) {
     super({type, city, dates, price, isFavorite}, destinationCities);
-    this._rollupButton = null;
-    this._toggleTypeInput = null;
+    this._rollupButton = this.element.querySelector(`.event__rollup-btn`);
+    this._toggleTypeInput = this.element.querySelector(`.event__type-toggle`);
+
+    this._onSubmit = null;
+    this._onChangeForm = null;
+    this._onEscKeyDown = null;
+    this._close = null;
   }
 
   get template() {
@@ -73,18 +78,38 @@ class PointEdit extends AbstractPoint {
             </form>`;
   }
 
-  get rollupButton() {
-    if (!this._rollupButton) {
-      this._rollupButton = this.element.querySelector(`.event__rollup-btn`);
-    }
-    return this._rollupButton;
+  set close(fn) {
+    this._close = fn;
   }
 
-  get toggleTypeInput() {
-    if (!this._toggleTypeInput) {
-      this._toggleTypeInput = this.element.querySelector(`.event__type-toggle`);
-    }
-    return this._toggleTypeInput;
+  set onEscKeyDown(fn) {
+    this._onEscKeyDown = fn;
+  }
+
+  set onChangeForm(fn) {
+    this._onChangeForm = fn;
+  }
+
+  set onSubmit(fn) {
+    this._onSubmit = fn;
+  }
+
+  bind() {
+    this._element.addEventListener(`change`, this._onChangeForm);
+    this._element.addEventListener(`submit`, this._onSubmit);
+    this._rollupButton.addEventListener(`click`, () => this.onClose());
+    document.addEventListener(`keydown`, this._onEscKeyDown);
+    this.initializeCalendars();
+  }
+
+  unbind() {
+    this.destroyCalendars();
+    document.removeEventListener(`keydown`, this._onEscKeyDown);
+  }
+
+  onClose() {
+    this._close();
+    this.unbind();
   }
 
   changeTextResetButton(text) {
@@ -98,7 +123,6 @@ class PointEdit extends AbstractPoint {
   }
 
   cancelChange(updateDestination, updateOffers) {
-    this.initializeCalendars();
     this._revertDestination(updateDestination);
     this._revertType(updateOffers);
     this._revertPrice();

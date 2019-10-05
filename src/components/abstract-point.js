@@ -8,7 +8,7 @@ class AbstractPoint extends AbstractComponent {
   constructor({type, city, dates, price, isFavorite}, destinationCities = []) {
     super();
     this._containerEventDetails = null;
-    this._choosenType = type ? type : ``;
+    this._choosenType = type;
     this._city = city;
     this._dates = dates;
     this._price = price;
@@ -25,7 +25,6 @@ class AbstractPoint extends AbstractComponent {
     this._saveButton = null;
     this._calendarStart = null;
     this._calendarEnd = null;
-    this._rollupButton = this.element.querySelector(`.event__rollup-btn`);
 
 
     if (new.target === AbstractPoint) {
@@ -41,10 +40,7 @@ class AbstractPoint extends AbstractComponent {
   }
 
   get containerEventDetails() {
-    if (!this._containerEventDetails) {
-      this._containerEventDetails = this.element.querySelector(`.event__details`);
-    }
-    return this._containerEventDetails;
+    return this._containerEventDetails = this.element.querySelector(`.event__details`);
   }
 
   applyClassForContainerEventDetails() {
@@ -56,9 +52,13 @@ class AbstractPoint extends AbstractComponent {
   }
 
   applySelectedType(type) {
-    this._uncheckedTypeInput();
-    this.element.querySelector(`.event__type-output`).textContent = `${type} ${getPreposition(type)}`;
-    this.element.querySelector(`.event__type-icon`).src = `img/icons/${type.toLowerCase()}.png`;
+    this._toggleTypeInput.checked = false;
+    this._choosenType = type;
+    this._partialUpdate();
+  }
+
+  _partialUpdate() {
+    this._element.innerHTML = this.template;
   }
 
   changeTextSaveButton(text) {
@@ -79,10 +79,6 @@ class AbstractPoint extends AbstractComponent {
 
   removeAnimation() {
     this.element.classList.remove(`shake`);
-  }
-
-  _removeHighlight() {
-    this.element.style.border = `none`;
   }
 
   initializeCalendars() {
@@ -107,6 +103,11 @@ class AbstractPoint extends AbstractComponent {
         this._calendarEnd.config.minDate = new Date(selectedDates);
       }
     });
+  }
+
+  destroyCalendars() {
+    this._calendarEnd.destroy();
+    this._calendarStart.destroy();
   }
 
   _containerEventDetailsShow() {
@@ -139,8 +140,8 @@ class AbstractPoint extends AbstractComponent {
     this._saveButton.disabled = isDisabled;
   }
 
-  _uncheckedTypeInput() {
-    this.element.querySelector(`.event__type-toggle`).checked = false;
+  _removeHighlight() {
+    this.element.style.border = `none`;
   }
 }
 

@@ -13,7 +13,7 @@ class PointNew extends AbstractPoint {
               <div class="event__type-wrapper">
                 <label class="event__type  event__type-btn" for="event-type-toggle-1">
                   <span class="visually-hidden">Choose event type</span>
-                  <img class="event__type-icon" width="17" height="17" src="img/icons/${this._choosenType}.png" alt="Event type icon">
+                  <img class="event__type-icon" width="17" height="17" src="img/icons/trip.png" alt="Event type icon">
                 </label>
                 <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
@@ -33,7 +33,7 @@ class PointNew extends AbstractPoint {
 
               <div class="event__field-group  event__field-group--destination">
                 <label class="event__label  event__type-output" for="event-destination-1">
-                  ${this._choosenType} ${this._preposition} 
+                  ${this._choosenType} 
                 </label>
                 <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${this._city}" list="destination-list-1">
                 <datalist id="destination-list-1">
