@@ -1,6 +1,7 @@
 import moment from "moment";
 import AbstractPoint from "./abstract-point";
 import dompurify from "dompurify";
+import {availableDestinations} from "../main";
 
 class PointNew extends AbstractPoint {
   constructor({type, city, dates, price}, destinationCities) {
@@ -37,7 +38,7 @@ class PointNew extends AbstractPoint {
                 </label>
                 <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${this._city}" list="destination-list-1">
                 <datalist id="destination-list-1">
-                  ${this._destinationCities.map((city) => `<option value="${dompurify.sanitize(city)}"></option>`).join(``)}
+                  ${availableDestinations.map(({name}) => `<option value="${dompurify.sanitize(name)}"></option>`).join(``)}
                 </datalist>
               </div>
 

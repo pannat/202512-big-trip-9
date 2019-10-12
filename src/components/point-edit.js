@@ -1,17 +1,61 @@
+import {Position, groupToType, InputName, render, unrender, getPreposition} from "../utils";
 import moment from "moment";
-import AbstractPoint from "./abstract-point";
 import dompurify from "dompurify";
+import {availableDestinations, availableOffers} from "../main";
+import AbstractComponent from "./abstract-component";
+import OffersComponent from "./offers";
+import DestinationComponent from "./destination";
+import flatpickr from "flatpickr";
+import "flatpickr/dist/flatpickr.min.css";
+import "flatpickr/dist/themes/light.css";
 
-class PointEdit extends AbstractPoint {
-  constructor({type, city, dates, price, isFavorite}, destinationCities) {
-    super({type, city, dates, price, isFavorite}, destinationCities);
+class PointEdit extends AbstractComponent {
+  constructor({type, city, dates, price, offers, description, pictures, isFavorite}) {
+    super();
+    this._choosenType = type;
+    this._preposition = getPreposition(type);
+    this._city = city;
+    this._dates = dates;
+    this._price = price;
+    this._offers = offers;
+    this._destination = {description, pictures};
+    this._isFavorite = isFavorite;
+    this._stageToPreposition = {
+      start: `From`,
+      end: `To`
+    };
+
+    this._toggleTypeInput = null;
+    this._typeLabel = null;
+    this._cityInput = null;
+    this._favoriteCheckbox = null;
+
     this._rollupButton = this.element.querySelector(`.event__rollup-btn`);
-    this._toggleTypeInput = this.element.querySelector(`.event__type-toggle`);
+    this._containerEventDetails = this.element.querySelector(`.event__details`);
+
+
+    this._isTypeChanged = false;
+    this._isCityChanged = false;
+    this._isPriceChanged = false;
+    this._isFavoriteChanged = false;
+
+    this._offersComponent = new OffersComponent(offers);
+    this._destinationComponent = new DestinationComponent(this._destination);
 
     this._onSubmit = null;
-    this._onChangeForm = null;
     this._onEscKeyDown = null;
     this._close = null;
+    this._open = null;
+    this.onClose = this.onClose.bind(this);
+    this.onOpen = this.onOpen.bind(this);
+    this._onChangeForm = this._onChangeForm.bind(this);
+
+    this.init();
+  }
+
+  init() {
+    render(this._containerEventDetails, this._offersComponent.element, Position.AFTERBEGIN);
+    render(this._containerEventDetails, this._destinationComponent.element, Position.BEFOREEND);
   }
 
   get template() {
@@ -25,9 +69,9 @@ class PointEdit extends AbstractPoint {
                   </label>
                   <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
                   <div class="event__type-list">
-                  ${Object.keys(this._groupToType).map((group) => `<fieldset class="event__type-group">
+                  ${Object.keys(groupToType).map((group) => `<fieldset class="event__type-group">
                       <legend class="visually-hidden">${group}</legend>
-                      ${this._groupToType[group].map((type) => `
+                      ${groupToType[group].map((type) => `
                       <div class="event__type-item">
                         <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}" 
                         ${type === this._choosenType ? `checked` : ``} >
@@ -44,7 +88,7 @@ class PointEdit extends AbstractPoint {
                   </label>
                   <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${this._city}" list="destination-list-1">
                   <datalist id="destination-list-1">
-                    ${this._destinationCities.map((city) => `<option value="${dompurify.sanitize(city)}"></option>`).join(``)}
+                    ${availableDestinations.map(({name}) => `<option value="${dompurify.sanitize(name)}"></option>`).join(``)}
                   </datalist>
                 </div>
                 <div class="event__field-group  event__field-group--time">
@@ -82,34 +126,190 @@ class PointEdit extends AbstractPoint {
     this._close = fn;
   }
 
+  set open(fn) {
+    this._open = fn;
+  }
+
   set onEscKeyDown(fn) {
     this._onEscKeyDown = fn;
   }
 
-  set onChangeForm(fn) {
-    this._onChangeForm = fn;
+  _onChangeForm(evt) {
+    if (evt.target.tagName !== `INPUT`) {
+      return;
+    }
+
+    switch (evt.target.name) {
+      case InputName.TYPE:
+        if (!this._isTypeChanged) {
+          this._isTypeChanged = true;
+        }
+
+        const selectedType = evt.target.value;
+        this._applySelectedType(selectedType);
+        const offersForSelectedType = availableOffers.find((it) => it.type === selectedType.toLowerCase()).offers;
+        this._updateOffersComponent(offersForSelectedType);
+        break;
+      case InputName.DESTINATION:
+        if (!this._isCityChanged) {
+          this._isCityChanged = true;
+        }
+        const selectedCity = evt.target.value;
+        const destinationForSelectedCity = availableDestinations.find((it) => it.name === selectedCity);
+        this._updateDestinationComponent(destinationForSelectedCity);
+        break;
+      case InputName.PRICE:
+        if (!this._isPriceChanged) {
+          this._isPriceChanged = true;
+        }
+        break;
+      case InputName.FAVORITE:
+        if (!this._isFavoriteChanged) {
+          this._isFavoriteChanged = true;
+        }
+        break;
+    }
   }
 
   set onSubmit(fn) {
     this._onSubmit = fn;
   }
 
-  bind() {
-    this._element.addEventListener(`change`, this._onChangeForm);
-    this._element.addEventListener(`submit`, this._onSubmit);
-    this._rollupButton.addEventListener(`click`, () => this.onClose());
-    document.addEventListener(`keydown`, this._onEscKeyDown);
-    this.initializeCalendars();
-  }
-
-  unbind() {
-    this.destroyCalendars();
-    document.removeEventListener(`keydown`, this._onEscKeyDown);
-  }
-
   onClose() {
     this._close();
     this.unbind();
+  }
+
+  onOpen() {
+    this._open();
+    this.bind();
+
+    if (this._isTypeChanged) {
+      this._isTypeChanged = false;
+      this._applySelectedType(this._choosenType);
+    }
+    this._updateOffersComponent(this._offers);
+
+    if (this._isCityChanged) {
+      this._isCityChanged = false;
+      this._revertCity();
+    }
+
+    if (this._isPriceChanged) {
+      this._isPriceChanged = false;
+      this._revertPrice();
+    }
+
+    if (this._isFavoriteChanged) {
+      this._isFavoriteChanged = false;
+      this._revertIsFavorite();
+    }
+  }
+
+  _revertCity() {
+    if (!this._cityInput) {
+      this._cityInput = this._element.querySelector(`.event__input--destination`);
+    }
+    this._cityInput.value = this._city;
+    this._updateDestinationComponent(this._destination);
+  }
+
+  _revertPrice() {
+    if (!this._priceInput) {
+      this._priceInput = this._element.querySelector(`.event__input--price`);
+    }
+    this._priceInput.value = this._price;
+  }
+
+  _revertIsFavorite() {
+    if (!this._favoriteCheckbox) {
+      this._favoriteCheckbox = this._element.querySelector(`.event__favorite-checkbox`);
+    }
+    this._favoriteCheckbox.checked = this._isFavorite;
+  }
+
+  _applySelectedType(type) {
+    if (!this._toggleTypeInput) {
+      this._toggleTypeInput = this._element.querySelector(`.event__type-toggle`);
+    }
+
+    if (!this._typeLabel) {
+      this._typeLabel = this._element.querySelector(`.event__type-output`);
+    }
+
+    this._toggleTypeInput.checked = false;
+    this._element.querySelector(`#event-type-${type}-1`).checked = true;
+    this._typeLabel.textContent = `${type} ${getPreposition(type)}`;
+  }
+
+  _updateOffersComponent(data) {
+    unrender(this._offersComponent.element);
+    this._offersComponent.removeElement();
+    if (data.length) {
+      this._offersComponent = new OffersComponent(data);
+      render(this._containerEventDetails, this._offersComponent.element, Position.AFTERBEGIN);
+    }
+    this._toggleAvailableEventDetails()
+  }
+
+  _updateDestinationComponent(data) {
+    unrender(this._destinationComponent.element);
+    this._destinationComponent.removeElement();
+    if (data) {
+      this._destinationComponent = new DestinationComponent(data);
+      render(this._containerEventDetails, this._destinationComponent.element, Position.BEFOREEND);
+    }
+    this._toggleAvailableEventDetails();
+  }
+
+  _toggleAvailableEventDetails() {
+    if (this._containerEventDetails.hasChildNodes()) {
+      this._containerEventDetails.classList.remove(`visually-hidden`);
+    } else {
+      this._containerEventDetails.classList.add(`visually-hidden`);
+    }
+  }
+
+  bind() {
+    this._initializeCalendars();
+    this._element.addEventListener(`change`, this._onChangeForm);
+    this._element.addEventListener(`submit`, this._onSubmit);
+    this._rollupButton.addEventListener(`click`, this.onClose);
+    document.addEventListener(`keydown`, this._onEscKeyDown);
+  }
+
+  unbind() {
+    this._destroyCalendars();
+    document.removeEventListener(`keydown`, this._onEscKeyDown);
+  }
+
+  _initializeCalendars() {
+    this._calendarEnd = flatpickr(this.element.querySelector(`input[name=${InputName.END_TIME}]`), {
+      altInput: true,
+      altFormat: `d.m.Y H:i`,
+      [`time_24hr`]: true,
+      enableTime: true,
+      dateFormat: `Y-m-d H:i`,
+      defaultDate: this._dates.end,
+      minDate: this._dates.start,
+    });
+
+    this._calendarStart = flatpickr(this.element.querySelector(`input[name=${InputName.START_TIME}]`), {
+      altInput: true,
+      altFormat: `d.m.Y H:i`,
+      [`time_24hr`]: true,
+      enableTime: true,
+      dateFormat: `Y-m-d H:i`,
+      defaultDate: this._dates.start,
+      onChange(selectedDates) {
+        this._calendarEnd.config.minDate = new Date(selectedDates);
+      }
+    });
+  }
+
+  _destroyCalendars() {
+    this._calendarEnd.destroy();
+    this._calendarStart.destroy();
   }
 
   changeTextResetButton(text) {
@@ -120,47 +320,6 @@ class PointEdit extends AbstractPoint {
     this._disableInputs(isDisabled);
     this._disableRollupButton(isDisabled);
     this._disableButtons(isDisabled);
-  }
-
-  cancelChange(updateDestination, updateOffers) {
-    this._revertDestination(updateDestination);
-    this._revertType(updateOffers);
-    this._revertPrice();
-    this._revertFavorite();
-    this._removeHighlight();
-    this.applyClassForContainerEventDetails();
-  }
-
-  _revertDestination(callback) {
-    const destinationInput = this._element.querySelector(`.event__input--destination`);
-    if (destinationInput.value !== this._city) {
-      destinationInput.value = this._city;
-      callback(this._city);
-    }
-  }
-
-  _revertType(callback) {
-    const checkedTypeInput = this._element.querySelector(`.event__type-input:checked`);
-    if (checkedTypeInput.value !== this._choosenType) {
-      this.applySelectedType(this._choosenType);
-      checkedTypeInput.checked = false;
-      this._element.querySelector(`#event-type-${this._choosenType}-1`).checked = true;
-      callback(this._choosenType);
-    }
-  }
-
-  _revertPrice() {
-    const priceInput = this._element.querySelector(`.event__input--price`);
-    if (Number(priceInput.value) !== this._price) {
-      priceInput.value = this._price;
-    }
-  }
-
-  _revertFavorite() {
-    const isFavoriteInput = this._element.querySelector(`.event__favorite-checkbox`);
-    if (isFavoriteInput.checked !== this._isFavorite) {
-      isFavoriteInput.checked = this._isFavorite;
-    }
   }
 }
 

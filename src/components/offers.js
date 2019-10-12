@@ -5,6 +5,8 @@ class Offers extends AbstractComponent {
   constructor(offers) {
     super();
     this._offers = offers;
+    this._offerInputs = this.element.querySelectorAll(`.event__offer-checkbox`);
+    this._priceElements = this.element.querySelectorAll(`.event__offer-price`);
   }
 
   get template() {
@@ -25,30 +27,13 @@ class Offers extends AbstractComponent {
                 </section>`;
   }
 
-  get offersInput() {
-    if (!this._offerInputs) {
-      this._offerInputs = this.element.querySelectorAll(`.event__offer-checkbox`);
-    }
-    return this._offerInputs;
-  }
-
   calculateOffersOfSelectedType() {
-    const priceElementsOfOffers = this.element.querySelectorAll(`.event__offer-price`);
-    return Array.from(this.offersInput).map((input, index) => ({
+    return Array.from(this._offerInputs).map((input, index) => ({
       title: input.name.slice(12),
-      price: Number(priceElementsOfOffers[index].textContent),
+      price: Number(this._priceElements[index].textContent),
       accepted: Boolean(input.checked)
     }));
   }
-
-  revertOffers() {
-    this.offersInput.forEach((offer, index) => {
-      if (offer.checked !== this._offers[index].accepted) {
-        offer.checked = this._offers.accepted;
-      }
-    });
-  }
-
 
 }
 

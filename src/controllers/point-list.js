@@ -2,8 +2,6 @@ import {Position, render, getUniqueList} from "../utils";
 import moment from "moment";
 import Day from "../components/day";
 import PointController from "./point";
-import NewPointController from "./point-new";
-import ModelPoint from "../model-point";
 
 const SortType = {
   EVENT: `event`,
@@ -18,7 +16,6 @@ class PointListController {
     this._subscriptions = [];
     this._uniqueDays = [];
     this._pointsDays = [];
-    this._newPointController = null;
     this._onChangeView = this._onChangeView.bind(this);
     this._onDataChange = onDataChange;
     this._calculateUniqueDays();
@@ -27,41 +24,37 @@ class PointListController {
     this._init();
   }
 
-  createNewPoint(container) {
-
-    if (this._newPointController) {
-      return;
-    }
-
-    const localPoint = {
-      [`id`]: this._points.length,
-      [`base_price`]: 0,
-      [`date_from`]: moment().format(),
-      [`date_to`]: moment().add(1, `hour`).format(),
-      [`destination`]: {
-        name: ``,
-        pictures: [],
-        description: ``
-      },
-      [`is_favorite`]: false,
-      [`offers`]: [],
-      [`type`]: ``
-    };
-
-    this._newPointController = new NewPointController(container, new ModelPoint(localPoint), this._onDataChange, this._onChangeView, () => {
-      this._newPointController = null;
-    });
-
-    this._subscriptions.push(this._newPointController.setDefaultView.bind(this._newPointController));
-  }
+  // createNewPoint(container) {
+  //
+  //   if (this._newPointController) {
+  //     return;
+  //   }
+  //
+  //   const localPoint = {
+  //     [`id`]: this._points.length,
+  //     [`base_price`]: 0,
+  //     [`date_from`]: moment().format(),
+  //     [`date_to`]: moment().add(1, `hour`).format(),
+  //     [`destination`]: {
+  //       name: ``,
+  //       pictures: [],
+  //       description: ``
+  //     },
+  //     [`is_favorite`]: false,
+  //     [`offers`]: [],
+  //     [`type`]: ``
+  //   };
+  //
+  //   this._newPointController = new NewPointController(container, new ModelPoint(localPoint), this._onDataChange, this._onChangeView, () => {
+  //     this._newPointController = null;
+  //   });
+  //
+  //   this._subscriptions.push(this._newPointController.setDefaultView.bind(this._newPointController));
+  // }
 
   renderPointList(element, points, container) {
     this._points = points;
     this._container = container;
-
-    if (this._newPointController) {
-      this._newPointController = null;
-    }
 
     switch (element.dataset.sortType) {
       case SortType.EVENT:
